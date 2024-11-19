@@ -1,4 +1,3 @@
-
 # Sistema Bibliotecário em Python
 
 Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
