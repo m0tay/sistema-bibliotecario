@@ -93,4 +93,3 @@ O sistema de recomendações é baseado nos empréstimos feitos por um usuário 
 4. **Geração de recomendações**: Com base nos dois gêneros mais solicitados e no gênero menos solicitado, o sistema irá gerar recomendações que equilibram os gostos do usuário com uma variedade de opções.
 
 Esse sistema dará recomendações mais personalizadas, levando em consideração os padrões de leitura do usuário, sugerindo, porém, também algo novo para ampliar os seus horizontes.
->>>>>>> 66cce91 (Initial commit)
