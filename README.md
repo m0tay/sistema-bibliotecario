@@ -3,7 +3,9 @@
 Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 
 ## Objetivos
+
 Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
+
 - [x] Alinhar equipa e decidir os fundamentos
 - [ ] Avaliar e atribuir tarefas para todos
 - [ ] Implementar funcionalidades para além do sistema bibliotecário
@@ -12,18 +14,18 @@ Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 - [ ] Melhorar a experiência do usuário (interface gráfica com [PyQt](https://doc.qt.io/qtforpython-6/))
 - [ ] Sistema de notificações
 
-
 ## Nosso método
+
 - Vamos usar *typing hint* no projeto, conforme o [link](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html) para garantir a tipagem estática e maior clareza no código.
 - Vamos usar o inglês como base para nomeação das variáveis e funções. A documentação será em português.
-- As pastas definem a função dos módulos: 
+- As pastas definem a função dos módulos:
   - `helpers`: Módulos auxiliares para funções de apoio e utilitários que não são o foco principal da aplicação.
   - `models`: Módulos para manipulação dos modelos de dados, que correspondem às tabelas da base de dados.
 - Comentar os processos e fluxos importantes, mas não comentar cada linha de código. O código deve ser claro o suficiente para se entender com facilidade.
   
 ## Estrutura do Projeto
 
-```
+```file
 helpers/
     database.py         # Funções auxiliares para manipulação da base de dados
     queue.py            # Funções auxiliares para manipulação de filas
@@ -40,6 +42,7 @@ main.py                 # Ponto de entrada do sistema
 ## Explicações
 
 ### O que é um modelo
+
 Um modelo é uma abstração de uma tabela da base de dados. Por exemplo, a tabela `books` terá o modelo `Book`. Isso é feito para garantir que as funções interajam com objetos do tipo `Book` e não diretamente com dados puros, como dicionários.
 
 Um **dicionário** não é igual a um objeto `Book`. Por exemplo, o código abaixo pode ser usado para representar um livro, mas o comportamento do objeto `Book` será mais robusto e permitirá o uso de métodos específicos para manipulação de dados.
@@ -65,14 +68,17 @@ book = Book(titulo=VALOR,
 Com isso, podemos garantir uma maior organização e flexibilidade no código.
 
 ### O que é um helper
+
 Um módulo helper é utilizado para funções auxiliares que ajudam a evitar repetição de código. Ele centraliza tarefas repetitivas ou específicas que são usadas em múltiplos pontos do sistema.
 
 Exemplo: funções para manipulação de banco de dados, como adicionar, editar ou deletar registros.
 
 ### O que é BREAD
+
 O [BREAD](https://github.com/thangchung/clean-architecture-dotnet/wiki/BREAD-vs-CRUD) (Browse, Read, Edit, Add, Delete) representa as operações básicas de manipulação de dados em um sistema. Essas operações devem ser implementadas de forma simples e reutilizável, de modo que possam ser usadas em diferentes pontos da aplicação para interagir com as tabelas de dados.
 
 **BREAD** se refere a:
+
 - **Browse**: Buscar todos os registros de uma tabela.
 - **Read**: Ler um registro específico.
 - **Edit**: Editar um registro existente.
@@ -84,6 +90,7 @@ Essas operações devem ser implementadas de forma genérica e reutilizável, pa
 ### Sistema de Recomendações
 
 O sistema de recomendações é baseado nos empréstimos feitos por um usuário no último ano. O processo é o seguinte:
+
 1. **Iteração sobre os empréstimos**: Vamos analisar todos os empréstimos feitos pelo usuário no último ano e coletar os gêneros dos livros que ele pegou emprestado.
 
 2. **Ranking de gêneros mais solicitados**: A partir dessa coleta, vamos ranquear os gêneros mais solicitados pelo usuário, identificando os dois gêneros mais pedidos.
@@ -93,3 +100,17 @@ O sistema de recomendações é baseado nos empréstimos feitos por um usuário 
 4. **Geração de recomendações**: Com base nos dois gêneros mais solicitados e no gênero menos solicitado, o sistema irá gerar recomendações que equilibram os gostos do usuário com uma variedade de opções.
 
 Esse sistema dará recomendações mais personalizadas, levando em consideração os padrões de leitura do usuário, sugerindo, porém, também algo novo para ampliar os seus horizontes.
+
+## Explicações que recomendo
+
+- [autopep8](https://marketplace.visualstudio.com/items?itemName=ms-python.autopep8)
+- [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+- [IntelliCode](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode)
+- [IntelliCode API Usage Examples](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.intellicode-api-usage-examples)
+- [Import Cost](https://marketplace.visualstudio.com/items?itemName=wix.vscode-import-cost)
+- [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance)
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance)
+- [Python Indent](https://marketplace.visualstudio.com/items?itemName=KevinRose.vsc-python-indent)
+- [SQLTools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools)
+- [SQLTools SQLite](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools-driver-sqlite)
