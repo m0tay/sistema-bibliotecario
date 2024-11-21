@@ -101,7 +101,7 @@ O sistema de recomendações é baseado nos empréstimos feitos por um usuário 
 
 Esse sistema dará recomendações mais personalizadas, levando em consideração os padrões de leitura do usuário, sugerindo, porém, também algo novo para ampliar os seus horizontes.
 
-## Explicações que recomendo
+## Extensões que recomendo
 
 - [autopep8](https://marketplace.visualstudio.com/items?itemName=ms-python.autopep8)
 - [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
