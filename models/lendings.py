@@ -52,9 +52,9 @@ def calculate_loan_schedule(principal, annual_rate, years, payments_per_year=12)
 
 
 # Exemplo de uso:
-principal = 100000  # Valor do empréstimo
+principal = 100  # Valor do empréstimo
 annual_rate = 0.05  # Taxa de juros anual (5%)
-years = 15          # Duração em anos
+years = 1  # Duração em anos
 
 loan_schedule = calculate_loan_schedule(principal, annual_rate, years)
 
