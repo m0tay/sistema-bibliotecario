@@ -1,62 +1,78 @@
-import pandas as pd
+from datetime import datetime, timedelta
 
-def calculate_loan_schedule(principal, annual_rate, years, payments_per_year=12):
-    """
-    Calcula o cronograma de amortização de um empréstimo.
+# Lista de livros disponíveis
+livros_disponiveis = [
+    {"id": 1, "titulo": "Livro A"},
+    {"id": 2, "titulo": "Livro B"},
+    {"id": 3, "titulo": "Livro C"},
+    {"id": 4, "titulo": "Livro D"},
+]
+
+# Usuários e seus empréstimos
+usuarios = {}
+
+def emprestar_livro(usuario, id_livro):
+    if usuario not in usuarios:
+        usuarios[usuario] = {"emprestimos": [], "suspenso_ate": None}
     
-    Args:
-        principal (float): Valor principal do empréstimo.
-        annual_rate (float): Taxa de juros anual (em decimal, por exemplo, 0.05 para 5%).
-        years (int): Duração do empréstimo em anos.
-        payments_per_year (int): Número de pagamentos por ano (padrão é 12).
+    # Verificar suspensão
+    if usuarios[usuario]["suspenso_ate"] and datetime.now() < usuarios[usuario]["suspenso_ate"]:
+        print(f"Usuário {usuario} está suspenso até {usuarios[usuario]['suspenso_ate']}.")
+        return
     
-    Returns:
-        DataFrame: Tabela com detalhes do cronograma de pagamento.
-    """
-    # Taxa de juros mensal
-    monthly_rate = annual_rate / payments_per_year
+    # Verificar limite de empréstimos
+    if len(usuarios[usuario]["emprestimos"]) >= 5:
+        print("Usuário já tem 5 livros emprestados.")
+        return
     
-    # Número total de pagamentos
-    total_payments = years * payments_per_year
+    # Verificar se o livro está disponível
+    livro = next((l for l in livros_disponiveis if l["id"] == id_livro), None)
+    if not livro:
+        print("Livro não está disponível.")
+        return
     
-    # Fórmula para o pagamento mensal fixo
-    monthly_payment = principal * (monthly_rate * (1 + monthly_rate) ** total_payments) / \
-                      ((1 + monthly_rate) ** total_payments - 1)
+    # Registrar empréstimo
+    data_devolucao = datetime.now() + timedelta(days=10)
+    usuarios[usuario]["emprestimos"].append({"id": id_livro, "data_devolucao": data_devolucao, "extensoes": 0})
+    livros_disponiveis.remove(livro)
+    print(f"Livro '{livro['titulo']}' emprestado para {usuario} até {data_devolucao}.")
+
+def extender_emprestimo(usuario, id_livro):
+    # Verificar se o livro está emprestado pelo usuário
+    emprestimo = next((e for e in usuarios[usuario]["emprestimos"] if e["id"] == id_livro), None)
+    if not emprestimo:
+        print("Este livro não está emprestado pelo usuário.")
+        return
     
-    # Variáveis para armazenar os dados do cronograma
-    balance = principal
-    schedule = []
+    # Verificar se pode estender
+    if emprestimo["extensoes"] >= 2:
+        print("O empréstimo já foi estendido o máximo de vezes.")
+        return
+    
+    emprestimo["data_devolucao"] += timedelta(days=10)
+    emprestimo["extensoes"] += 1
+    print(f"Empréstimo do livro {id_livro} estendido até {emprestimo['data_devolucao']}.")
 
-    for i in range(1, total_payments + 1):
-        # Cálculo dos juros do mês
-        interest = balance * monthly_rate
-        # Pagamento do principal
-        principal_payment = monthly_payment - interest
-        # Atualizar o saldo
-        balance -= principal_payment
-        
-        # Evitar saldo negativo devido a arredondamentos
-        balance = max(balance, 0)
-        
-        # Adicionar ao cronograma
-        schedule.append({
-            "Payment #": i,
-            "Monthly Payment": round(monthly_payment, 2),
-            "Interest Paid": round(interest, 2),
-            "Principal Paid": round(principal_payment, 2),
-            "Remaining Balance": round(balance, 2)
-        })
+def devolver_livro(usuario, id_livro):
+    # Verificar se o livro está emprestado pelo usuário
+    emprestimo = next((e for e in usuarios[usuario]["emprestimos"] if e["id"] == id_livro), None)
+    if not emprestimo:
+        print("Este livro não está emprestado pelo usuário.")
+        return
+    
+    # Verificar atraso
+    if datetime.now() > emprestimo["data_devolucao"]:
+        print("Devolução atrasada! Usuário será suspenso por 5 dias.")
+        usuarios[usuario]["suspenso_ate"] = datetime.now() + timedelta(days=5)
+    
+    # Devolver o livro
+    usuarios[usuario]["emprestimos"].remove(emprestimo)
+    livros_disponiveis.append({"id": id_livro, "titulo": f"Livro {chr(64 + id_livro)}"})  # Adiciona de volta na lista
+    print(f"Livro {id_livro} devolvido com sucesso.")
 
-    # Retornar o cronograma como um DataFrame
-    return pd.DataFrame(schedule)
-
-
-# Exemplo de uso:
-principal = 100  # Valor do empréstimo
-annual_rate = 0.05  # Taxa de juros anual (5%)
-years = 1  # Duração em anos
-
-loan_schedule = calculate_loan_schedule(principal, annual_rate, years)
-
-# Mostrar os primeiros registros do cronograma
-import ace_tools as tools; tools.display_dataframe_to_user(name="Cronograma de Pagamento de Empréstimo", dataframe=loan_schedule)
+# Exemplo de uso
+emprestar_livro("João", 1)
+emprestar_livro("João", 2)
+extender_emprestimo("João", 1)
+devolver_livro("João", 1)
+devolver_livro("João", 2)
