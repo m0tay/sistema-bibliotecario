@@ -7,7 +7,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 
 - [x] Alinhar equipa e decidir os fundamentos
-- [ ] Avaliar e atribuir tarefas para todos
+- [x] Avaliar e atribuir tarefas para todos
 - [ ] Implementar funcionalidades para além do sistema bibliotecário
   - [ ] Fila de empréstimo (`queue.py` + `database.py` + `books.py`)
   - [ ] Algoritmo de recomendações (`recommendations.py`)
