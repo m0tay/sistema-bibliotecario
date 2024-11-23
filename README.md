@@ -7,12 +7,27 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 
 - [x] Alinhar equipa e decidir os fundamentos
-- [ ] Avaliar e atribuir tarefas para todos
+- [x] Avaliar e atribuir tarefas para todos
 - [ ] Implementar funcionalidades para além do sistema bibliotecário
   - [ ] Fila de empréstimo (`queue.py` + `database.py` + `books.py`)
   - [ ] Algoritmo de recomendações (`recommendations.py`)
 - [ ] Melhorar a experiência do usuário (interface gráfica com [PyQt](https://doc.qt.io/qtforpython-6/))
 - [ ] Sistema de notificações
+
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    participant John
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts<br/>prevail...
+    John->>Alice: Great!
+    John->>Bob: How about you?
+    Bob->>John: Jolly good!
+```
 
 ## Nosso método
 
@@ -86,6 +101,45 @@ O [BREAD](https://github.com/thangchung/clean-architecture-dotnet/wiki/BREAD-vs-
 - **Delete**: Deletar um registro existente.
 
 Essas operações devem ser implementadas de forma genérica e reutilizável, para que possam ser usadas por diferentes modelos, como `User`, `Book`, `Lending`, etc.
+
+### O que é um decorador (funções com "@qualquer-coisa-em-cima")
+
+Um decorador modifica ou estende o comportamento de funções ou métodos, aplicado com @decorador. Por exemplo, @staticmethod torna um método estático, permitindo chamá-lo pela classe sem instância. Isto é
+
+```py
+class Weather:
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def is_rainy():
+        return "it's rainy!"
+
+print(Weather.is_rainy())
+# Output: it's rainy!
+```
+
+Sem o decorador transformado aquela função em estática hávemos de instanciar um novo objeto, ainda que não o usemos para nada além do uso iminente, enquanto que com o `@staticmethod` apenas referenciamos a classe e o método.
+
+```py
+class Weather:
+    def __init__(self):
+        pass
+
+    def is_rainy():
+        return "it's rainy!"
+
+weather_object = Weather()
+
+print(weather_object.is_rainy())
+# Output: it's rainy!
+```
+
+#### Classe, objeto, método estático?
+
+- Classe: Um molde para criar objetos, definindo atributos e comportamentos (métodos).
+- Instanciar: Criar um objeto baseado em uma classe.
+- Métodos estáticos: Funções dentro de uma classe que não dependem de instância; chamados diretamente pela classe.
 
 ### Sistema de Recomendações
 
