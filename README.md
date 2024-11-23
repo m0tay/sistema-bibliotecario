@@ -14,21 +14,6 @@ Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 - [ ] Melhorar a experiência do usuário (interface gráfica com [PyQt](https://doc.qt.io/qtforpython-6/))
 - [ ] Sistema de notificações
 
-```mermaid
-sequenceDiagram
-    participant Alice
-    participant Bob
-    participant John
-    Alice->>John: Hello John, how are you?
-    loop Healthcheck
-        John->>John: Fight against hypochondria
-    end
-    Note right of John: Rational thoughts<br/>prevail...
-    John->>Alice: Great!
-    John->>Bob: How about you?
-    Bob->>John: Jolly good!
-```
-
 ## Nosso método
 
 - Vamos usar *typing hint* no projeto, conforme o [link](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html) para garantir a tipagem estática e maior clareza no código.
