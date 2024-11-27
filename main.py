@@ -1,6 +1,5 @@
 from helpers import database as db
 from models.books import Book
-from models.users import User
 
 if __name__ == "__main__":
 
@@ -24,16 +23,13 @@ if __name__ == "__main__":
              synopsis="A romantic novel exploring themes of love and social standing.", publisher="T. Egerton, Whitehall", genres="Romance|Clássicos|Drama", isbn="9789897391019")
 
     # imprimindo uma lista dos livros na tabela books
-    if books := Book.browse():
-        print("Livros:\n", "\n\t".join(
-            [str(book) for book in books]))
-    else:
-        print("não há livros")
+    print("Livros:\n", "\n\t".join(
+        [str(book) for book in Book.browse()]) if Book.browsable() else "não há livros")
 
     # retorna o livro com base no id referido
     book = Book.read(3)
     print(f"\n\nRead book: {book}")
-
+    
     # atualiza os campos passados do livro referido
     Book.edit(book_id=3, authors="Lee Harper",
               genres="Drama|Suspense", published_date="2024-11-22")
@@ -49,6 +45,7 @@ if __name__ == "__main__":
     # atualiza os campos passados do livro referido
     Book.edit(book_id=2, authors="Leo Tolstoyi", title="War and Peace")
 
+
     # retorna o livro com base no id referido
     book = Book.read(2)
     print(f"\n\nRead book: {book}")
@@ -57,30 +54,12 @@ if __name__ == "__main__":
 
     # retorna o livro com base no id referido
     book = Book.read(2)
-
+    
     # deleta o livro referido da tabela
     Book.delete(book_id=book.id)
 
     print("\n\n")
 
     # imprimindo uma lista dos livros na tabela books
-    if books := Book.browse():
-        print("Livros:\n", "\n\t".join(
-            [str(book) for book in books]))
-    else:
-        print("não há livros")
-        
-        
-    # Interface ao banco de dados
-    db.drop_table(User.table_name)
-    db.create_table(User.table_name, db.table_fields(User))
-    
-    # Interface ao modelo
-    User.add(name="Nícolas Alvez", register_date="2024-11-22")
-    User.add(name="Flávio Marques", register_date="2024-11-20")
-    
-    if users := User.browse():
-        print("Usuários:\n", "\n\t".join(
-            [str(user) for user in users]))
-    else:
-        print("não há usuários")
+    print("Livros:\n", "\n\t".join(
+        [str(book) for book in Book.browse()]) if Book.browsable() else "não há livros")
