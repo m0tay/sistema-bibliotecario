@@ -2,23 +2,10 @@ from dataclasses import dataclass, fields as dataclass_fields, KW_ONLY, field
 from datetime import datetime
 from typing import Optional, TypedDict
 from helpers import database as db
-from warnings import deprecated
 
 # Géneros:
 genres_list: list[str] = ['Romance', 'Mistério', 'Fantasia', 'Ficção Científica', 'Aventura', 'História', 'Terror', 'Clássicos', 'Poesia', 'Drama', 'Infantojuvenil', 'Autoajuda', 'Religião',
                           'Filosofia', 'Humor', 'Biografia', 'Autobiografia', 'Suspense', 'Thriller', 'Contos', 'Distopia', 'Utopia', 'Realismo', 'Épico', 'Western', 'Policial', 'Chick-lit', 'Jovem Adulto', 'Guerra', 'Ensaios']
-
-
-# Fiz isso, mas acho que vou remover futuramente, basicamente o intuito era dar um typing hint na hora de preencher os campos no Book.add(), mas ou o pylance não consegue fazer algo tão complexo ou eu sou idiota
-
-class BookFields(TypedDict):
-    title: str
-    authors: str
-    published_date: datetime
-    synopsis: str
-    publisher: str
-    isbn: str
-    genres: str
 
 
 @dataclass
@@ -77,14 +64,15 @@ class Book:
         """
         return genres_list
 
-    @classmethod
-    def browsable(cls) -> bool:
-        """
-        Retorna todos os livros da tabela `books`.
-        """
-        rows = db.browse(Book.table_name, db.table_fields(
-            cls, return_field_names=True))
-        return True if rows else False
+    # NÃO APAGAR: Versão antiga para referência
+    # @classmethod
+    # def browsable(cls) -> bool:
+    #     """
+    #     Retorna todos os livros da tabela `books`.
+    #     """
+    #     rows = db.browse(Book.table_name, db.table_fields(
+    #         cls, return_field_names=True))
+    #     return True if rows else False
 
     @classmethod
     def browse(cls) -> Optional[list["Book"]]:
@@ -132,7 +120,7 @@ class Book:
         # return Book(**result) if result else None
 
     @staticmethod
-    def edit(book_id: int, **fields: "BookFields") -> Optional["Book"]:
+    def edit(book_id: int, **fields) -> Optional["Book"]:
         """
         Atualiza o registo especificado.
 
@@ -161,7 +149,7 @@ class Book:
         #     db.edit(Book.table_name, Book.fields(include_id=False), values, condition)
 
     @classmethod
-    def add(cls, **fields: "BookFields") -> None:
+    def add(cls, **fields) -> None:
         """
         Insere um livro à tabela `books`.
         """
