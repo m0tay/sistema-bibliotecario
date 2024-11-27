@@ -2,6 +2,25 @@
 
 Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 
+---
+
+## Tabela de Conteúdos
+
+1. Objetivos
+2. Nosso Método
+3. Estrutura do Projeto
+4. Explicações
+   1. O que é um Modelo
+      1. Diferença entre User.add(), db.add() e add()
+   2. O que é um Helper
+   3. O que é BREAD
+   4. O que é um Decorador
+5. Sistema de Recomendações
+6. Extensões Recomendadas
+7. Como Começar a Trabalhar com o Projeto
+
+---
+
 ## Objetivos
 
 Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
@@ -26,17 +45,18 @@ Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 ## Estrutura do Projeto
 
 ```file
-helpers/
-    database.py         # Funções auxiliares para manipulação da base de dados
-    queue.py            # Funções auxiliares para manipulação de filas
-    notifications.py    # Funções para envio de notificações
-    recommendations.py  # Funções para gerar recomendações
-models/
-    audit.py            # Modelo para auditoria de ações
-    lendings.py         # Modelo para empréstimos
-    users.py            # Modelo para usuários
-    books.py            # Modelo para livros
-main.py                 # Ponto de entrada do sistema
+sistema-bibliotecario/
+    helpers/
+        database.py         # Funções auxiliares para manipulação da base de dados
+        queue.py            # Funções auxiliares para manipulação de filas
+        notifications.py    # Funções para envio de notificações
+        recommendations.py  # Funções para gerar recomendações
+    models/
+        audit.py            # Modelo para auditoria de ações
+        lendings.py         # Modelo para empréstimos
+        users.py            # Modelo para usuários
+        books.py            # Modelo para livros
+    main.py                 # Ponto de entrada do sistema
 ```
 
 ## Explicações
@@ -48,24 +68,48 @@ Um modelo é uma abstração de uma tabela da base de dados. Por exemplo, a tabe
 Um **dicionário** não é igual a um objeto `Book`. Por exemplo, o código abaixo pode ser usado para representar um livro, mas o comportamento do objeto `Book` será mais robusto e permitirá o uso de métodos específicos para manipulação de dados.
 
 ```python
-book = {"titulo": VALOR,
-        "data_publicacao": VALOR,
-        "sinopse": VALOR,
-        "editora": VALOR,
-        "generos": VALOR}
+book = {title="1984", 
+        publication_date="1949-09-31", 
+        synopsis="A dystopian future.",
+        publisher="Edipro",
+        genres="Drama|Suspense|Ficção Científica"}
 ```
 
 Entretanto, isso é diferente de:
 
 ```python
-book = Book(titulo=VALOR, 
-            data_publicacao=VALOR, 
-            sinopse=VALOR,
-            editora=VALOR,
-            generos=VALOR)
+book = Book(title="1984", 
+        publication_date="1949-09-31", 
+        synopsis="A dystopian future.",
+        publisher="Edipro",
+        genres="Drama|Suspense|Ficção Científica")
 ```
 
 Com isso, podemos garantir uma maior organização e flexibilidade no código.
+
+#### Diferença entre `User.add()`, `db.add()` e `add()`
+
+A diferenciação entre essas funções torna o código mais modular, reutilizável e fácil de manter. Cada função tem uma responsabilidade bem definida, o que permite que mudanças sejam feitas em uma camada sem afetar as demais.
+
+1. **`User.add()` (main.py)**: É o ponto de entrada para adicionar um novo usuário no sistema. Ele interage diretamente com a lógica de negócio, como a validação de dados de entrada ou a execução de ações específicas antes de adicionar o usuário. Esse método é específico para o contexto do modelo `User`.
+
+2. **`db.add()` (users.py)**: A função `db.add()` encapsula a lógica de inserção no banco de dados. Ela abstrai os detalhes de execução de SQL e permite que o código seja mais limpo e menos propenso a erros. Aqui, o banco de dados é tratado de forma genérica, podendo ser usado por diferentes modelos, não apenas `User`.
+
+3. **`add()` (database.py)**: Esta função está no módulo auxiliar (helper) e é responsável por construir e executar as queries SQL para inserção. Ela centraliza e padroniza a lógica de inserção de dados, evitando repetição de código e facilitando a manutenção e o entendimento do processo de inserção no banco.
+
+#### Por que isso é melhor?
+
+Essa abordagem modular e segmentada oferece várias vantagens:
+
+- **Separation of concerns (Separação de responsabilidades)**: Cada função tem uma única responsabilidade (adicionar dados no banco, validar dados, gerar queries SQL), o que facilita manutenção e expansão.
+  
+- **Reusabilidade e Flexibilidade**: A função `db.add()` pode ser reutilizada para diferentes tipos de dados (não só para usuários), sem que a lógica de inserção precise ser reescrita a cada vez. `add()` em `database.py` oferece uma solução genérica que pode ser aplicada em qualquer modelo de dados.
+
+- **Manutenção Facilitada**: Mudanças na lógica de banco de dados (como uma alteração na query SQL ou na estrutura da tabela) podem ser feitas no helper `add()`, sem afetar a lógica de validação ou regras de negócio do `User.add()`.
+
+Essa estrutura modularizada, com funções distribuídas por diferentes camadas (validação de dados, lógica de aplicação e banco de dados), melhora a clareza, torna o código mais seguro e facilita testes e futuras alterações.
+
+---
 
 ### O que é um helper
 
@@ -153,3 +197,18 @@ Esse sistema dará recomendações mais personalizadas, levando em consideraçã
 - [Python Indent](https://marketplace.visualstudio.com/items?itemName=KevinRose.vsc-python-indent)
 - [SQLTools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools)
 - [SQLTools SQLite](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools-driver-sqlite)
+
+## Como começar a trabalhar com o projeto?
+
+Para iniciar a trabalhar no projeto vocês precisam ter o git e o python instalados e configurados no computador. Como vocês estão usando Windows o método de isntalação será diferente. Definir o Git como variável de ambiente permitirá usá-lo no Command Prompt (cmd).
+
+Para definir o Git como uma variável de ambiente no Windows, você precisa adicionar o caminho do executável git.exe ao *Path* do sistema, para assim o Windows reconheça os comandos Git:
+
+1. Abra as configurações de variáveis de ambiente: Pesquise por “Variáveis de Ambiente” no menu Iniciar e clique em “Editar variáveis de ambiente do sistema”.
+
+2. Adicione o caminho do Git: Na seção “Variáveis do Sistema”, selecione Path, clique em Editar, e adicione o caminho onde o Git está instalado (por exemplo, `C:\Program Files\Git\bin`ou `C:\Programas\Git\bin`).
+
+3. Salve as alterações e reinicie o terminal para aplicar.
+
+Voilà, isso não te acontecerá mais:
+![git not recognized](https://www.partitionwizard.com/images/uploads/2021/05/git-is-not-recognized-thumbnail.png)
