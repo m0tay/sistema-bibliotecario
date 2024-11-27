@@ -5,8 +5,8 @@ from helpers import database as db
 from warnings import deprecated
 
 # Géneros:
-genres_list: list[str] = ['Romance', 'Mistério', 'Fantasia', 'Ficção Científica', 'Aventura', 'História', 'Terror', 'Clássicos', 'Poesia', 'Drama', 'Infantojuvenil', 'Autoajuda', 'Religião', 'Filosofia',
-                          'Humor', 'Biografia', 'Autobiografia', 'Suspense', 'Thriller', 'Contos', 'Distopia', 'Utopia', 'Realismo', 'Épico', 'Western', 'Policial', 'Chick-lit', 'Jovem Adulto', 'Guerra', 'Ensaios']
+genres_list: list[str] = ['Romance', 'Mistério', 'Fantasia', 'Ficção Científica', 'Aventura', 'História', 'Terror', 'Clássicos', 'Poesia', 'Drama', 'Infantojuvenil', 'Autoajuda', 'Religião',
+                          'Filosofia', 'Humor', 'Biografia', 'Autobiografia', 'Suspense', 'Thriller', 'Contos', 'Distopia', 'Utopia', 'Realismo', 'Épico', 'Western', 'Policial', 'Chick-lit', 'Jovem Adulto', 'Guerra', 'Ensaios']
 
 
 # Fiz isso, mas acho que vou remover futuramente, basicamente o intuito era dar um typing hint na hora de preencher os campos no Book.add(), mas ou o pylance não consegue fazer algo tão complexo ou eu sou idiota
@@ -34,7 +34,7 @@ class Book:
     synopsis: str
     publisher: str
     isbn: str
-    genres: str  # os géneros iram ficar numa string só delimitador por |
+    genres: str
 
     # @classmethod
     # def fields(cls, include_id=False) -> list[str]:
