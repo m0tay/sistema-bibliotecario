@@ -39,7 +39,7 @@ def create_table(table_name: str, table_fields: list[tuple]) -> None:
     conn.commit()
     conn.close()
 
-    print(f"`{table_name}` tabela criada com êxito!")
+    # print(f"`{table_name}` tabela criada com êxito!")
 
 
 def drop_table(table_name: str) -> None:
@@ -56,7 +56,7 @@ def drop_table(table_name: str) -> None:
     conn.commit()
     conn.close()
 
-    print(f"`{table_name}` tabela deletada com êxito!")
+    # print(f"`{table_name}` tabela deletada com êxito!"
 
 
 def clear_table(table_name: str) -> None:
@@ -70,7 +70,7 @@ def clear_table(table_name: str) -> None:
     conn.commit()
     conn.close()
 
-    print(f"`{table_name}` tabela foi limpa com êxito!")
+    # print(f"`{table_name}` tabela foi limpa com êxito!")
 
 
 def table_fields(table_class: Type[object], return_field_names=False, return_field_id=False) -> list[tuple[str, str]]:
@@ -207,7 +207,7 @@ def edit(table_name: str, fields: dict[str, str], condition: str) -> None:
     conn.commit()
     conn.close()
 
-    print(f"Registro da tabela {table_name} atualizado com êxito!")
+    # print(f"Registro da tabela {table_name} atualizado com êxito!")
 
 
 def add(table_name: str, fields: dict[str, str]) -> None:
@@ -235,34 +235,7 @@ def add(table_name: str, fields: dict[str, str]) -> None:
     conn.commit()
     conn.close()
 
-    print(f"Registro adicionado com êxito na tabela {table_name}!")
-
-
-# NÃO APAGAR: Versão antiga para referência
-# def add(table_name: str, fields: list[str], values: list[tuple]) -> None:
-#     """
-#     Adiciona novos registros à tabela.
-
-#     - `table_name`: Nome da tabela.
-#     - `fields`: Lista dos campos a serem inseridos.
-#     - `values`: Lista de valores correspondentes aos campos.
-
-#     Exemplo de uso:
-#     add("livros", ["titulo", "autor"], [("Título do Livro", "Autor do Livro")])
-#     """
-#     conn = connect_to_database()
-#     cur = conn.cursor()
-
-#     # Gerando placeholders e query de inserção
-#     placeholders = ", ".join("?" for _ in fields)
-#     fields_str = ', '.join(fields)
-#     query = f"INSERT INTO {table_name} ({fields_str}) VALUES ({placeholders})"
-
-#     cur.executemany(query, values)
-#     conn.commit()
-#     conn.close()
-
-#     print(f"Registros adicionados com êxito na tabela {table_name}!")
+    # print(f"Registro adicionado com êxito na tabela {table_name}!")
 
 
 def delete(table_name: str, condition: str) -> None:
@@ -285,4 +258,4 @@ def delete(table_name: str, condition: str) -> None:
     conn.commit()
     conn.close()
 
-    print(f"Registro da tabela {table_name} deletado com êxito!")
+    # print(f"Registro da tabela {table_name} deletado com êxito!")
