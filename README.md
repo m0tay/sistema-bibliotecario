@@ -4,20 +4,24 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 
 ---
 
-## Tabela de Conteúdos
-
-1. Objetivos
-2. Nosso Método
-3. Estrutura do Projeto
-4. Explicações
-   1. O que é um Modelo
-      1. Diferença entre User.add(), db.add() e add()
-   2. O que é um Helper
-   3. O que é BREAD
-   4. O que é um Decorador
-5. Sistema de Recomendações
-6. Extensões Recomendadas
-7. Como Começar a Trabalhar com o Projeto
+- [Sistema Bibliotecário em Python](#sistema-bibliotecário-em-python)
+  - [Objetivos](#objetivos)
+  - [Nosso método](#nosso-método)
+  - [Estrutura do Projeto](#estrutura-do-projeto)
+  - [Explicações](#explicações)
+    - [O que é um modelo](#o-que-é-um-modelo)
+      - [Diferença entre `User.add()`, `db.add()` e `add()`](#diferença-entre-useradd-dbadd-e-add)
+      - [Por que isso é melhor?](#por-que-isso-é-melhor)
+    - [O que é um helper](#o-que-é-um-helper)
+    - [O que é BREAD](#o-que-é-bread)
+    - [O que é um decorador (funções com "@qualquer-coisa-em-cima")](#o-que-é-um-decorador-funções-com-qualquer-coisa-em-cima)
+      - [Classe, objeto, método estático?](#classe-objeto-método-estático)
+    - [Sistema de Recomendações](#sistema-de-recomendações)
+  - [Extensões que recomendo](#extensões-que-recomendo)
+  - [Como começar a trabalhar com o projeto?](#como-começar-a-trabalhar-com-o-projeto)
+    - [Git](#git)
+    - [Python](#python)
+  - [Usando o Git (no projeto)](#usando-o-git-no-projeto)
 
 ---
 
@@ -45,18 +49,18 @@ Vamos por fases desenvolver essa aplicação para gestão de uma biblioteca:
 ## Estrutura do Projeto
 
 ```file
-sistema-bibliotecario/
-    helpers/
+sistema-bibliotecario/      # Diretório raiz do projeto
+    helpers/                # Módulo helpers
         database.py         # Funções auxiliares para manipulação da base de dados
         queue.py            # Funções auxiliares para manipulação de filas
         notifications.py    # Funções para envio de notificações
         recommendations.py  # Funções para gerar recomendações
-    models/
+    models/                 # Módulo models
         audit.py            # Modelo para auditoria de ações
         lendings.py         # Modelo para empréstimos
         users.py            # Modelo para usuários
         books.py            # Modelo para livros
-    main.py                 # Ponto de entrada do sistema
+    main.py                 # Ponto de entrada do programa
 ```
 
 ## Explicações
@@ -68,11 +72,14 @@ Um modelo é uma abstração de uma tabela da base de dados. Por exemplo, a tabe
 Um **dicionário** não é igual a um objeto `Book`. Por exemplo, o código abaixo pode ser usado para representar um livro, mas o comportamento do objeto `Book` será mais robusto e permitirá o uso de métodos específicos para manipulação de dados.
 
 ```python
-book = {title="1984", 
-        publication_date="1949-09-31", 
-        synopsis="A dystopian future.",
-        publisher="Edipro",
-        genres="Drama|Suspense|Ficção Científica"}
+book = {title: "1984", 
+        publication_date: "1949-09-31", 
+        synopsis: "A dystopian future.",
+        publisher: "Edipro",
+        genres: "Drama|Suspense|Ficção Científica"}
+
+print(f"Livro: {book['book']}")
+# Livro: 1984
 ```
 
 Entretanto, isso é diferente de:
@@ -83,9 +90,23 @@ book = Book(title="1984",
         synopsis="A dystopian future.",
         publisher="Edipro",
         genres="Drama|Suspense|Ficção Científica")
+
+print(f"Livro: {book.title}")
+# Livro: 1984
 ```
 
-Com isso, podemos garantir uma maior organização e flexibilidade no código.
+Com isso, podemos garantir uma maior organização e flexibilidade no código *e* usar métodos próprios da classe.
+
+```python
+# Enviando um email
+from helpers import notifications
+
+book = Book.read(1) # Suponhamos que 1 é o id do livro criado no exemplo anterior
+user = User.read(3) # Suponhamos que 3 é o id de um usuário qualquer 
+
+notifications.send_email(user_email=user.email, corpo_do_email=f"Obrigado {user.name}, por devolver a tempo o livro {book.title} de {book.authors}.")
+# Obrigado Tiago, por devolver a tempo o livro 1984 de George Orwell.
+```
 
 #### Diferença entre `User.add()`, `db.add()` e `add()`
 
@@ -200,6 +221,8 @@ Esse sistema dará recomendações mais personalizadas, levando em consideraçã
 
 ## Como começar a trabalhar com o projeto?
 
+### Git
+
 Para iniciar a trabalhar no projeto vocês precisam ter o git e o python instalados e configurados no computador. Como vocês estão usando Windows o método de isntalação será diferente. Definir o Git como variável de ambiente permitirá usá-lo no Command Prompt (cmd).
 
 Para definir o Git como uma variável de ambiente no Windows, você precisa adicionar o caminho do executável git.exe ao *Path* do sistema, para assim o Windows reconheça os comandos Git:
@@ -212,3 +235,40 @@ Para definir o Git como uma variável de ambiente no Windows, você precisa adic
 
 Voilà, isso não te acontecerá mais:
 ![git not recognized](https://www.partitionwizard.com/images/uploads/2021/05/git-is-not-recognized-thumbnail.png)
+
+### Python
+
+É necessário depois de ter o Python instalado configurá-lo na *Path* do sistema Windows. Para configurar a variável de ambiente do Python no Windows, siga estes três passos:
+
+1. **Abrir configurações de variáveis de ambiente**:
+   - Pressione `Win + R`, digite `sysdm.cpl` e pressione `Enter`. No menu "Propriedades do Sistema", clique em **Configurações Avançadas do Sistema** e depois em **Variáveis de Ambiente**.
+
+2. **Adicionar Python ao PATH**:
+   - Em "Variáveis do Sistema", selecione a variável `Path` e clique em **Editar**.
+   - Clique em **Novo** e adicione o caminho para a pasta onde o Python está instalado: `where python` para pegar o endereço do Python, se não for, procure aí...v
+
+3. **Salvar e testar**:
+   - Clique em **OK** para salvar. Abra o **Prompt de Comando** e digite `python --version` para verificar se a configuração foi bem-sucedida.
+
+## Usando o Git (no projeto)
+
+Para realmente aprenderem o git minimamente o caminho é ler o [ebook](https://git-scm.com/book/pt-pt/v2/Come%c3%a7ando-Sobre-Controle-de-Vers%c3%a3o).
+
+1. Sempre que forem começar a trabalhar façam `git pull origin main`, isto garantirá que trabalhem com a última versão do projeto.
+2. Sempre antes de fazerem `git push -u origin main` façam `git pull origin main`, isto garantirá que trabalhem com a última versão do projeto.
+3. Usem `git status` para checharem como está o git.
+4. Usem o `git tree` para verem a lista dos vossos commits (é um comando personalisado, para o adicionar façam `git config alias.tree "log --graph --decorate --pretty=oneline --abbrev-commit"`).
+5. Ao escrever mensagens de commit, sigam estas diretrizes:
+   - **Evitem mensagens genéricas ou pouco informativas**, como:
+
+     - `fix`
+     - `conserto de função`
+     - `update`
+     - `roberto carlos`
+
+   - **Prefiram mensagens claras que expliquem o que o commit realmente fez.** Exemplos:
+
+     - `implementei uma função para enviar e-mails`
+     - `refatorei a função de recomendação de livros com base nas últimas solicitações do usuário`
+
+   Não é necessário seguir uma convenção rígida. Mensagens descritivas, como `add: novo arquivo de requerimentos`, são aceitáveis, mas sempre que possível, optem por algo mais detalhado.
