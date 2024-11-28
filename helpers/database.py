@@ -116,6 +116,16 @@ def table_fields(table_class: Type[object], return_field_names=False, return_fie
     return table_fields
 
 
+def validate_fields(cls: Type[object], fields):
+    valid_fields = [field.name for field in dataclass_fields(
+        cls) if field.name != "id"]
+
+    for field in fields:
+        if field not in valid_fields:
+            raise ValueError(f"Campo inválido: '{
+                field}'. Campos válidos: {valid_fields}")
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Funções BREAD (Browse, Read, Add, Edit, Delete) genéricas para modelos.
 # Servem como interfaces entre os modelos Python (ex: "Livro") e suas respectivas
