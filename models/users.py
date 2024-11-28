@@ -24,7 +24,7 @@ class User:
                 f"\tAge: {self.age}\n"
                 f"\tGender: {self.gender}\n"
                 f"\tRegistered at: {self.register_date}\n")
-        
+
     @classmethod
     def preferences(cls):
         """
