@@ -1,78 +1,90 @@
-from datetime import datetime, timedelta
+from dataclasses import KW_ONLY, dataclass
+from datetime import datetime
+from typing import Optional
 
-# Lista de livros disponíveis
-livros_disponiveis = [
-    {"id": 1, "titulo": "Livro A"},
-    {"id": 2, "titulo": "Livro B"},
-    {"id": 3, "titulo": "Livro C"},
-    {"id": 4, "titulo": "Livro D"},
-]
+from helpers import database as db
+from models.books import Book
+from models.users import User
 
-# Usuários e seus empréstimos
-usuarios = {}
 
-def emprestar_livro(usuario, id_livro):
-    if usuario not in usuarios:
-        usuarios[usuario] = {"emprestimos": [], "suspenso_ate": None}
-    
-    # Verificar suspensão
-    if usuarios[usuario]["suspenso_ate"] and datetime.now() < usuarios[usuario]["suspenso_ate"]:
-        print(f"Usuário {usuario} está suspenso até {usuarios[usuario]['suspenso_ate']}.")
-        return
-    
-    # Verificar limite de empréstimos
-    if len(usuarios[usuario]["emprestimos"]) >= 5:
-        print("Usuário já tem 5 livros emprestados.")
-        return
-    
-    # Verificar se o livro está disponível
-    livro = next((l for l in livros_disponiveis if l["id"] == id_livro), None)
-    if not livro:
-        print("Livro não está disponível.")
-        return
-    
-    # Registrar empréstimo
-    data_devolucao = datetime.now() + timedelta(days=10)
-    usuarios[usuario]["emprestimos"].append({"id": id_livro, "data_devolucao": data_devolucao, "extensoes": 0})
-    livros_disponiveis.remove(livro)
-    print(f"Livro '{livro['titulo']}' emprestado para {usuario} até {data_devolucao}.")
+@dataclass
+class Lending:
+    table_name = "lendings"
 
-def extender_emprestimo(usuario, id_livro):
-    # Verificar se o livro está emprestado pelo usuário
-    emprestimo = next((e for e in usuarios[usuario]["emprestimos"] if e["id"] == id_livro), None)
-    if not emprestimo:
-        print("Este livro não está emprestado pelo usuário.")
-        return
-    
-    # Verificar se pode estender
-    if emprestimo["extensoes"] >= 2:
-        print("O empréstimo já foi estendido o máximo de vezes.")
-        return
-    
-    emprestimo["data_devolucao"] += timedelta(days=10)
-    emprestimo["extensoes"] += 1
-    print(f"Empréstimo do livro {id_livro} estendido até {emprestimo['data_devolucao']}.")
+    # Campos da tabela
+    id: int
+    _: KW_ONLY
+    user_id: int
+    book_id: int
+    from_date: datetime
+    to_date: datetime
 
-def devolver_livro(usuario, id_livro):
-    # Verificar se o livro está emprestado pelo usuário
-    emprestimo = next((e for e in usuarios[usuario]["emprestimos"] if e["id"] == id_livro), None)
-    if not emprestimo:
-        print("Este livro não está emprestado pelo usuário.")
-        return
-    
-    # Verificar atraso
-    if datetime.now() > emprestimo["data_devolucao"]:
-        print("Devolução atrasada! Usuário será suspenso por 5 dias.")
-        usuarios[usuario]["suspenso_ate"] = datetime.now() + timedelta(days=5)
-    
-    # Devolver o livro
-    usuarios[usuario]["emprestimos"].remove(emprestimo)
-    livros_disponiveis.append({"id": id_livro, "titulo": f"Livro {chr(64 + id_livro)}"})  # Adiciona de volta na lista
-    print(f"Livro {id_livro} devolvido com sucesso.")
+    def __str__(self):
+        return (f"\n{'Lending ID:':.<32}{self.id}\n"
+                f"\t{'User:'}{User.read(self.user_id)}\n"
+                f"\t{'Book'}{Book.read(self.book_id)}\n"
+                f"\t{'From date:':.<24}{self.from_date}\n"
+                f"\t{'To date:':.<24}{self.to_date}\n")
 
-# Exemplo de uso
-emprestar_livro("João", 1)
-emprestar_livro("João", 2)
-extender_emprestimo("João", 1)
-devolver_livro("João", 1)
-devolver_livro("João", 2)
+    @classmethod
+    def from_user(cls, user_id: int) -> Optional[list["Lending"]]:
+        """
+        Retorna todos os empréstimos da tabela `lendings` a partir do id do usuário atrelados a estes.
+        """
+        condition: str = f"id = {user_id}"
+
+        rows = db.browse(cls.table_name, db.table_fields(
+            cls, return_field_names=True, return_field_id=True), condition)
+
+        return [cls(**row) for row in rows] if rows else None
+
+    @classmethod
+    def browse(cls) -> Optional[list["Lending"]]:
+        """
+        Retorna todos os empréstimos da tabela `lendings`.
+        """
+        rows = db.browse(cls.table_name, db.table_fields(
+            cls, return_field_names=True, return_field_id=True))
+        return [cls(**row) for row in rows] if rows else None
+
+    @classmethod
+    def read(cls, lending_id: int) -> Optional["Lending"]:
+        """
+        Retorna um único empréstimo através do id.
+        """
+        result = db.read(cls.table_name, db.table_fields(
+            cls, return_field_names=True, return_field_id=True), f"id = {lending_id}")
+        return cls(**result) if result else None
+
+    @classmethod
+    def edit(cls, lending_id: int, **fields) -> Optional["Lending"]:
+        """
+        Atualiza o registo especificado.
+
+        Campos da tabela
+        - `user_id`
+        - `book_id`
+        - `from_date`
+        - `to_date`
+        """
+        condition: str = f"id = {lending_id}"
+
+        db.validate_fields(cls, fields)
+
+        db.edit(Lending.table_name, fields, condition)
+
+    @classmethod
+    def add(cls, **fields) -> None:
+        """
+        Insere um empréstimo à tabela `lendings`.
+        """
+        db.validate_fields(cls, fields)
+
+        db.add(Lending.table_name, fields)
+
+    @staticmethod
+    def delete(lending_id: int) -> None:
+        """
+        Deleta um empréstimo da tabela `lendings` através do id.
+        """
+        db.delete(Lending.table_name, f"id = {lending_id}")
