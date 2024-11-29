@@ -17,6 +17,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
     - [O que é um decorador (funções com "@qualquer-coisa-em-cima")](#o-que-é-um-decorador-funções-com-qualquer-coisa-em-cima)
       - [Classe, objeto, método estático?](#classe-objeto-método-estático)
     - [Sistema de Recomendações](#sistema-de-recomendações)
+    - [\_: KW\_ONLY](#_-kw_only)
   - [Extensões que recomendo](#extensões-que-recomendo)
   - [Como começar a trabalhar com o projeto?](#como-começar-a-trabalhar-com-o-projeto)
     - [Git](#git)
@@ -204,6 +205,10 @@ O sistema de recomendações é baseado nos empréstimos feitos por um usuário 
 4. **Geração de recomendações**: Com base nos dois gêneros mais solicitados e no gênero menos solicitado, o sistema irá gerar recomendações que equilibram os gostos do usuário com uma variedade de opções.
 
 Esse sistema dará recomendações mais personalizadas, levando em consideração os padrões de leitura do usuário, sugerindo, porém, também algo novo para ampliar os seus horizontes.
+
+### _: KW_ONLY
+
+O `_:KW_ONLY` em dataclass do Python indica que todos os campos definidos após ele devem ser passados apenas como argumentos nomeados (keyword-only, isto é `param=arg`). Isso melhora a legibilidade e segurança do código ao evitar argumentos posicionais acidentais.
 
 ## Extensões que recomendo
 

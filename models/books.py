@@ -1,4 +1,4 @@
-from dataclasses import dataclass, fields as dataclass_fields, KW_ONLY
+from dataclasses import dataclass, KW_ONLY
 from datetime import datetime
 from typing import Optional
 from helpers import database as db
@@ -24,18 +24,18 @@ class Book:
     isbn: Optional[str]
     genres: str
     pages: Optional[int]
-
+    
     def __str__(self):
-        return (f"\n\tBook ID: {self.id}\n"
-                f"\tTitle: {self.title}\n"
-                f"\tSub title: {self.sub_title}\n"
-                f"\tAuthors: {self.authors}\n"
-                f"\tPublished Date: {self.published_date}\n"
-                f"\tPublisher: {self.publisher}\n"
-                f"\tISBN: {self.isbn}\n"
-                f"\tGenres: {self.genres}\n"
-                f"\tSynopsis: {self.synopsis}\n"
-                f"\tPages: {self.pages}\n")
+        return (f"\n\t{'Book ID:':.<24}{self.id}\n"
+                f"\t{'Title:':.<24}{self.title}\n"
+                f"\t{'Sub title:':.<24}{self.sub_title}\n"
+                f"\t{'Authors:':.<24}{self.authors}\n"
+                f"\t{'Published Date:':.<24}{self.published_date}\n"
+                f"\t{'Publisher:':.<24}{self.publisher}\n"
+                f"\t{'ISBN:':.<24}{self.isbn}\n"
+                f"\t{'Genres:':.<24}{self.genres}\n"
+                f"\t{'Synopsis:':.<24}{self.synopsis}\n"
+                f"\t{'Pages:':.<24}{self.pages}\n")
 
     def genres() -> list[str]:
         """

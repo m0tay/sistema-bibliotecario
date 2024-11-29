@@ -1,7 +1,9 @@
-from dataclasses import dataclass, fields as dataclass_fields, KW_ONLY
+from dataclasses import KW_ONLY, dataclass
 from datetime import datetime
 from typing import Optional
+
 from helpers import database as db
+
 
 
 @dataclass
@@ -18,12 +20,12 @@ class User:
     register_date: datetime
 
     def __str__(self):
-        return (f"\n\tUser ID: {self.id}\n"
-                f"\tName: {self.name}\n"
-                f"\tEmail: {self.email}\n"
-                f"\tAge: {self.age}\n"
-                f"\tGender: {self.gender}\n"
-                f"\tRegistered at: {self.register_date}\n")
+        return (f"\n\t{'User ID:':.<24}{self.id}\n"
+                f"\t{'Name:':.<24}{self.name}\n"
+                f"\t{'Email:':.<24}{self.email}\n"
+                f"\t{'Age:':.<24}{self.age}\n"
+                f"\t{'Gender:':.<24}{self.gender}\n"
+                f"\t{'Registered at:':.<24}{self.register_date}\n")
 
     @classmethod
     def preferences(cls):
