@@ -31,12 +31,24 @@ class Lending:
         """
         Retorna todos os empréstimos da tabela `lendings` a partir do id do usuário atrelados a estes.
         """
-        condition: str = f"id = {user_id}"
+        condition: str = f"user_id = {user_id}"
 
         rows = db.browse(cls.table_name, db.table_fields(
             cls, return_field_names=True, return_field_id=True), condition)
 
-        return [cls(**row) for row in rows] if rows else None
+        return [cls(**row) for row in rows] if rows else []
+
+    @classmethod
+    def from_book(cls, book_id: int) -> Optional[list["Lending"]]:
+        """
+        Retorna todos os empréstimos da tabela `lendings` a partir do id do livro atrelados a estes.
+        """
+        condition: str = f"book_id = {book_id}"
+
+        rows = db.browse(cls.table_name, db.table_fields(
+            cls, return_field_names=True, return_field_id=True), condition)
+
+        return [cls(**row) for row in rows] if rows else []
 
     @classmethod
     def browse(cls) -> Optional[list["Lending"]]:
