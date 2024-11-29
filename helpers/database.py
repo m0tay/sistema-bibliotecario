@@ -143,7 +143,7 @@ def validate_fields(cls: Type[object], fields):
 # duplicação de código.
 # ─────────────────────────────────────────────────────────────────────
 
-def browse(table_name: str, fields: list[str]) -> Optional[list[dict]]:
+def browse(table_name: str, fields: list[str], condition: Optional[str] = None) -> Optional[list[dict]]:
     """
     Retorna todos os registros de uma tabela.
 
@@ -157,7 +157,7 @@ def browse(table_name: str, fields: list[str]) -> Optional[list[dict]]:
 
     # Construção da query para selecionar os campos
     fields_str = ", ".join(fields)
-    query = f"SELECT {fields_str} FROM {table_name}"
+    query = f"SELECT {fields_str} FROM {table_name} WHERE {condition}" if condition else f"SELECT {fields_str} FROM {table_name}"  # noqa: E501
 
     cur.execute(query)
     rows = cur.fetchall()
