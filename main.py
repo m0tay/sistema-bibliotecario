@@ -1,8 +1,9 @@
 from helpers import database as db
+from helpers import notifications as nt
 from models.books import Book
 from models.lendings import Lending
 from models.users import User
-\
+
 if __name__ == "__main__":
 
     # limpando qualquer tabela
@@ -148,3 +149,11 @@ if __name__ == "__main__":
     if lendings := Lending.browse():
         print("Empréstimos:\n", "\n\t".join(
             [str(lending) for lending in lendings]))
+
+
+    user = User.read(user_id=2)
+    book = Book.read(book_id=3)
+    
+    texto:str = f"Obrigado {user.name} por ter devolvido o livro {book.title} de {book.authors}."
+
+    nt.send_email(user.email, texto, user.id)
