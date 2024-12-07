@@ -99,16 +99,22 @@ def table_fields(model: type[object]) -> list[tuple[str, str]]:
     return table_fields
 
 
-def validate_fields(model: type[object], fields):
+def validate_fields(model: type[object], fields: list[str]) -> None:
     """
-    Retorna verdadeiro ou falso consoante aos campos comparados baterem corretamente com campos do modelo.
-    """
-    valid_fields = [field.name for field in dataclass_fields(
-        model)]
+    Valida os campos fornecidos em relação aos campos definidos no modelo.
 
-    for field in fields:
-        if field not in valid_fields:
-            raise ValueError(f"\nCampo inválido: '{field}'\nCampos válidos: {valid_fields}")  # noqa: E501
+    - `model`: Classe do modelo de dados (ex: `User`).
+    - `fields`: Lista de campos para validação.
+
+    Levanta `ValueError` caso algum campo seja inválido.
+    """
+    valid_fields = {field.name for field in dataclass_fields(model)}
+    invalid_fields = set(fields) - valid_fields
+
+    if invalid_fields:
+        raise ValueError(f"\nCampos inválidos: {
+                         invalid_fields}\nCampos válidos: {valid_fields}")
+
 
 # ─────────────────────────────────────────────────────────────────────
 # Funções BREAD (Browse, Read, Add, Edit, Delete) genéricas para modelos.
@@ -144,7 +150,6 @@ def browse(model: type[object], **conditions: Optional[dict[str, any]]) -> Optio
     validate_fields(model, conditions.keys())
 
     # Preparar dados para a construção da query
-    fields = table_fields(model)
     where_clause = " AND ".join(f"{key} = ?" for key in conditions.keys())
     values = tuple(conditions.values())
 
@@ -159,9 +164,8 @@ def browse(model: type[object], **conditions: Optional[dict[str, any]]) -> Optio
         print(f"An error occurred: {e.args[0]}")
 
     # Preparando dados para a construação do modelo a ser retornado
-    fields = [field[0] for field in table_fields(model)]
-    models_dict = [dict(zip(fields, row_values)) for row_values in rows] if rows else None  # noqa: E501
-    return [model(**m) for m in models_dict] if models_dict else []
+    field_names = [field[0] for field in table_fields(model)]
+    return [model(**dict(zip(field_names, row))) for row in rows] if rows else []
 
 
 def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
@@ -181,8 +185,7 @@ def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
     validate_fields(model, conditions.keys())
 
     # Preparar dados para a construção da query
-    fields = table_fields(model)
-    field_str = ", ".join(field_name[0] for field_name in fields)
+    field_str = ", ".join(field_name[0] for field_name in table_fields(model))
     where_clause = " AND ".join(f"{key} = ?" for key in conditions.keys())
     values = tuple(conditions.values())
 
@@ -197,13 +200,11 @@ def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
         print(f"An error occurred: {e.args[0]}")
 
     # Preparando dados para a construação do modelo a ser retornado
-    fields = [field[0] for field in fields]
-    values = [value for value in row]
-    model_dict = dict(zip(fields, values)) if row else None  # noqa: E501
-    return model(**model_dict) if model_dict else []
+    field_names = [field[0] for field in table_fields(model)]
+    return model(**dict(zip(field_names, row))) if row else []
 
 
-def edit(model: type[object], id: int, **updates: dict[str, any]) -> None:
+def edit(model: type[object], id: int, **updates: dict[str, any]) -> type[object]:
     """
     Atualiza os campos de um registro identificado pelo `id` com os valores fornecidos.
 
@@ -234,8 +235,11 @@ def edit(model: type[object], id: int, **updates: dict[str, any]) -> None:
     except sqlite3.Error as e:
         print(f"An error occurred: {e.args[0]}")
 
+    updated_instance = read(model, id=id)
+    return updated_instance
 
-def add(model: type[object]) -> None:
+
+def add(model: type[object]) -> type[object]:
     """
     Adiciona um novo registro à tabela com base nos dados fornecidos no modelo.
 
@@ -270,6 +274,8 @@ def add(model: type[object]) -> None:
         conn.close()
     except sqlite3.Error as e:
         print(f"An error occurred: {e.args[0]}")
+
+    return model
 
 
 def delete(model: type[object], *, id: int) -> None:
