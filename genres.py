@@ -3,5 +3,5 @@ genres_list = [
     'História', 'Terror', 'Clássicos', 'Poesia', 'Drama', 'Infantojuvenil', 
     'Autoajuda', 'Religião', 'Filosofia', 'Humor', 'Biografia', 'Autobiografia', 
     'Suspense', 'Thriller', 'Contos', 'Distopia', 'Utopia', 'Realismo', 'Épico', 
-    'Western', 'Policial', 'Chick-lit', 'Jovem Adulto', 'Guerra', 'Ensaios'
+    'Western', 'Policial', 'Chick-lit', 'Jovem Adulto', 'Guerra', 'Ensaios' 
 ]
