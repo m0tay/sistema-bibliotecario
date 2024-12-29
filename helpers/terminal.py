@@ -2,6 +2,7 @@ from datetime import date
 from typing import Callable, Dict, Optional, Any
 from os import system, name
 
+
 # Função para limpar o terminal/console
 def clear_cli():
     return system("cls") if name == "nt" else system("clear")
@@ -39,8 +40,10 @@ def menu(options: Optional[Dict[str, Dict[str, Callable[..., Any]]]] = None):
             print("Use the menu options to exit.")
 
 # Função para criar submenus
-def submenu(options: Dict[str, Dict[str, Any]]) -> Callable:
+def submenu(options: Dict[str, Dict[str, Any]], text: Optional[str] = None) -> Callable:
     def menu_handler() -> bool:
+        if text is not None:
+            print(text)
         menu(options)
         return False
     return menu_handler
