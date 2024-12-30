@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from typing import Optional
 from dataclasses import fields as dataclass_fields
@@ -9,6 +10,7 @@ from datetime import date
 # `noqa: E501` é um código para indicar ao formatador para não dividir a linha em duas com o word wrap
 # ─────────────────────────────────────────────────────────────────────
 
+DATABASE_FILENAME = "library.sqlite3"
 
 # Conexão com o banco de dados
 # Esta função estabelece a conexão com o arquivo onde a base de dados encontra-se
@@ -17,7 +19,7 @@ def connect_to_database() -> sqlite3.Connection:
     Estabelece a conexão com o arquivo onde a base de dados encontra-se.
     Retorna um objeto de conexão SQLite.
     """
-    return sqlite3.connect("library.sqlite3")
+    return sqlite3.connect(DATABASE_FILENAME)
 
 
 def create_table(model: type[object]) -> None:
