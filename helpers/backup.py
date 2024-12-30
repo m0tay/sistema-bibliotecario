@@ -12,7 +12,6 @@ from .database import DATABASE_FILENAME
 BACKUP_TARGET: str = DATABASE_FILENAME
 BACKUP_DIR: str = "backups"
 
-
 # ─────────────────────────────────────────────────────────────────────
 # Funções de gerenciamento de backups
 # - create_backups_folder: Cria a pasta de backups caso não exista.
@@ -94,9 +93,7 @@ def load_backup() -> None:
         print("There are no backups to load!")
         return
 
-    latest_backup = max(
-        backups, key=lambda b: int(b.split("_")[1])
-    )
+    latest_backup = max(backups, key=lambda b: int(b.split("_")[1]))
     sh.copy2(os.path.join(BACKUP_DIR, latest_backup), BACKUP_TARGET)
     print(f"Loaded backup: {latest_backup}")
 
