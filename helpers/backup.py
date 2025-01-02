@@ -115,6 +115,7 @@ def list_backups() -> None:
     Exibe uma lista de backups com seus índices e a data de criação formatada. Caso não haja backups, não faz nada.
     """
     if not os.listdir(BACKUP_DIR):
+        print("There are bo backups!")
         return
 
     for backup in os.listdir(BACKUP_DIR):
