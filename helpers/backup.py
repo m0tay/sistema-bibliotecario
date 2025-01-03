@@ -100,9 +100,6 @@ def load_backup() -> None:
 def setup() -> None:
     """
     Configura a pasta de backups e cria um backup inicial se necessário.
-
-    - Cria a pasta de backups se ela não existir.
-    - Cria um backup inicial caso a pasta de backups esteja vazia.
     """
     create_backups_folder()
     if not os.listdir(BACKUP_DIR):

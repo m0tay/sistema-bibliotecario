@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from typing import Optional
+from typing import Any, Optional, Dict, List
 from dataclasses import fields as dataclass_fields
 from datetime import date
 
@@ -33,7 +33,7 @@ def create_table(model: type[object]) -> None:
 
     # Criação da query para a criação da tabela
     fields_str = ", ".join(f"{field[0]} {field[1]}" for field in table_fields(model))  # noqa: E501
-    query = f"CREATE TABLE IF NOT EXISTS {model.table_name.lower()} ({fields_str})"  # noqa: E501
+    query = f"CREATE TABLE IF NOT EXISTS {model.table_name.lower()} ({fields_str})"  # noqa: E501 # pyright: ignore
 
     cur.executescript(query)
     conn.commit()
@@ -52,7 +52,7 @@ def drop_table(model: type[object]) -> None:
     cur = conn.cursor()
 
     # Deletando a tabela se ela existir
-    cur.execute(f"DROP TABLE IF EXISTS {model.table_name.lower()}")
+    cur.execute(f"DROP TABLE IF EXISTS {model.table_name.lower()}") # pyright: ignore
     conn.commit()
     conn.close()
 
@@ -70,7 +70,7 @@ def table_fields(model: type[object]) -> list[tuple[str, str]]:
     - O tipo SQL correspondente (ex: "TEXT NOT NULL", "INTEGER NULL").
     """
     # Obter os nomes dos campos da classe passada
-    field_names = [f.name for f in dataclass_fields(model)]  # noqa: E501
+    field_names = [f.name for f in dataclass_fields(model)]  # noqa: E501 # pyright: ignore
 
     # field_names_with_id = [f.name for f in dataclass_fields(
     #     model)]
@@ -94,14 +94,14 @@ def table_fields(model: type[object]) -> list[tuple[str, str]]:
 
     # Gera a lista de campoœs e tipos SQL
     table_fields = [
-        (field_name, type_mapping[field_type] if field_name != "id" else "INTEGER PRIMARY KEY NOT NULL")  # noqa: E501
-        for field_name, field_type in zip(field_names, [f.type for f in dataclass_fields(model)])  # noqa: E501
+        (field_name, type_mapping[field_type] if field_name != "id" else "INTEGER PRIMARY KEY NOT NULL")  # noqa: E501 # pyright: ignore
+        for field_name, field_type in zip(field_names, [f.type for f in dataclass_fields(model)])  # noqa: E501 # pyright: ignore
     ]
 
     return table_fields
 
 
-def validate_fields(model: type[object], fields: list[str]) -> None:
+def validate_fields(model: type[object], fields: List[str]) -> None:
     """
     Valida os campos fornecidos em relação aos campos definidos no modelo.
 
@@ -110,7 +110,7 @@ def validate_fields(model: type[object], fields: list[str]) -> None:
 
     Levanta `ValueError` caso algum campo seja inválido.
     """
-    valid_fields = {field.name for field in dataclass_fields(model)}
+    valid_fields = {field.name for field in dataclass_fields(model)} # pyright: ignore
     invalid_fields = set(fields) - valid_fields
 
     if invalid_fields:
@@ -135,7 +135,7 @@ def validate_fields(model: type[object], fields: list[str]) -> None:
 # ─────────────────────────────────────────────────────────────────────
 
 
-def browse(model: type[object], **conditions: Optional[dict[str, any]]) -> Optional[list[dict]]:
+def browse(model: type[object], **conditions: Optional[Dict[str, Any]]) -> List[Dict]:
     """
     Retorna todos os registros de uma tabela.
 
@@ -149,14 +149,14 @@ def browse(model: type[object], **conditions: Optional[dict[str, any]]) -> Optio
     cur = conn.cursor()
 
     # Validar os campos providos
-    validate_fields(model, conditions.keys())
+    validate_fields(model, conditions.keys()) # pyright: ignore
 
     # Preparar dados para a construção da query
     where_clause = " AND ".join(f"{key} = ?" for key in conditions.keys())
     values = tuple(conditions.values())
 
     # Construção da query
-    query = f"SELECT * FROM {model.table_name} WHERE {where_clause}" if conditions else f"SELECT * FROM {model.table_name}"  # noqa: E501
+    query = f"SELECT * FROM {model.table_name} WHERE {where_clause}" if conditions else f"SELECT * FROM {model.table_name}"  # noqa: E501 # pyright: ignore
 
     try:
         cur.execute(query, values)
@@ -167,10 +167,10 @@ def browse(model: type[object], **conditions: Optional[dict[str, any]]) -> Optio
 
     # Preparando dados para a construação do modelo a ser retornado
     field_names = [field[0] for field in table_fields(model)]
-    return [model(**dict(zip(field_names, row))) for row in rows] if rows else []
+    return [model(**dict(zip(field_names, row))) for row in rows] if rows else [] # pyright: ignore
 
 
-def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
+def read(model: type[object], **conditions: Dict[str, Any]) -> Optional[Dict]:
     """
     Retorna um único registro da tabela baseado nas condições fornecidas.
 
@@ -184,7 +184,7 @@ def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
     cur = conn.cursor()
 
     # Validar os campos providos
-    validate_fields(model, conditions.keys())
+    validate_fields(model, conditions.keys()) # pyright: ignore
 
     # Preparar dados para a construção da query
     field_str = ", ".join(field_name[0] for field_name in table_fields(model))
@@ -192,7 +192,7 @@ def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
     values = tuple(conditions.values())
 
     # Construção da query
-    query = f"SELECT {field_str} FROM {model.table_name} WHERE {where_clause}"
+    query = f"SELECT {field_str} FROM {model.table_name} WHERE {where_clause}" # pyright: ignore
 
     try:
         cur.execute(query, values)
@@ -203,10 +203,10 @@ def read(model: type[object], **conditions: dict[str, any]) -> Optional[dict]:
 
     # Preparando dados para a construação do modelo a ser retornado
     field_names = [field[0] for field in table_fields(model)]
-    return model(**dict(zip(field_names, row))) if row else []
+    return model(**dict(zip(field_names, row))) if row else [] # pyright: ignore
 
 
-def edit(model: type[object], id: int, **updates: dict[str, any]) -> type[object]:
+def edit(model: type[object], id: int, **updates: Dict[str, Any]) -> type[object]:
     """
     Atualiza os campos de um registro identificado pelo `id` com os valores fornecidos.
 
@@ -221,14 +221,14 @@ def edit(model: type[object], id: int, **updates: dict[str, any]) -> type[object
     cur = conn.cursor()
 
     # Validar os campos providos
-    validate_fields(model, updates.keys())
+    validate_fields(model, updates.keys()) # pyright: ignore
 
     # Preparar dados para a construção da query
     set_clause = ", ".join(f"{field} = ?" for field in updates)
     values = tuple(updates.values()) + (id,)
 
     # Construção da query
-    query = f"UPDATE {model.table_name} SET {set_clause} WHERE id = ?"
+    query = f"UPDATE {model.table_name} SET {set_clause} WHERE id = ?" # pyright: ignore
 
     try:
         cur.execute(query, values)
@@ -237,11 +237,11 @@ def edit(model: type[object], id: int, **updates: dict[str, any]) -> type[object
     except sqlite3.Error as e:
         print(f"An error occurred: {e.args[0]}")
 
-    updated_instance = read(model, id=id)
-    return updated_instance
+    updated_instance = read(model, id=id) # pyright: ignore
+    return updated_instance # pyright: ignore
 
 
-def add(model: type[object]) -> type[object]:
+def add(model: type[object], verbose=False) -> type[object]:
     """
     Adiciona um novo registro à tabela com base nos dados fornecidos no modelo.
 
@@ -260,7 +260,7 @@ def add(model: type[object]) -> type[object]:
     fields = {k: v for k, v in model.__dict__.items() if k != "table_name"}  # noqa: E501
 
     # Validar os campos providos
-    validate_fields(model, fields.keys())
+    validate_fields(model, fields.keys()) # pyright: ignore
 
     # Preparar dados para a construção da query
     placeholders = ", ".join("?" for _ in fields)
@@ -268,7 +268,7 @@ def add(model: type[object]) -> type[object]:
     values = tuple(fields.values())
 
     # Construção da query
-    query = f"INSERT INTO {model.table_name} ({fields_str}) VALUES ({placeholders})"  # noqa: E501
+    query = f"INSERT INTO {model.table_name} ({fields_str}) VALUES ({placeholders})"  # noqa: E501 # pyright: ignore
 
     try:
         cur.execute(query, values)
@@ -276,6 +276,9 @@ def add(model: type[object]) -> type[object]:
         conn.close()
     except sqlite3.Error as e:
         print(f"An error occurred: {e.args[0]}")
+
+    if verbose:
+        print(f"added {type(model)}")
 
     return model
 
@@ -295,7 +298,7 @@ def delete(model: type[object], *, id: int) -> None:
     cur = conn.cursor()
 
     # Construção da query
-    query = f"DELETE FROM {model.table_name} WHERE id = {id}"
+    query = f"DELETE FROM {model.table_name} WHERE id = {id}" # pyright: ignore
 
     try:
         cur.execute(query)
