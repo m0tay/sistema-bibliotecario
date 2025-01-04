@@ -7,6 +7,7 @@ from helpers import database as db
 from helpers import recommendations as r  # noqa
 from helpers import terminal as t
 from helpers import settings as s
+from genres import genres_list
 from models import Audit, Book, Lending, User  # noqa: F403
 
 page_range = {'start': 0, 'end': 10, 'pages': 0}
@@ -243,7 +244,19 @@ def main():
 										publisher_input = get_non_empty_input('Publisher: ')
 										isbn_input = get_non_empty_input('ISBN (optional, press Enter to skip): ', optional=True)
 
-										genres_input = get_non_empty_input('Genres (comma-separated): ')
+										temp: int = 0
+										t_str: str = ''
+
+										for g in genres_list:
+											temp += 1
+											t_str += (', ' + g) if temp > 1 else g
+
+											if temp >= 5:
+												print(t_str)
+												temp = 0
+												t_str = ''
+
+										genres_input = get_non_empty_input('(Select from those)\nGenres (separate with | ): ')
 
 										while True:
 											try:
@@ -459,11 +472,13 @@ def main():
 							while True:
 								# paginate by pagination_size
 								lendings = db.browse(Lending)
+								pages['total'] = (len(lendings) + settings['page_size'] - 1) // settings['page_size']
+
 								for idx, l in enumerate(lendings):
 									if t.in_range(idx, page_range):
-										# user = db.read(User, id=l.user_id)
-										# book = db.read(Book, id=l.book_id)
-										print(l)
+										user = db.read(User, id=l.user_id)
+										book = db.read(Book, id=l.book_id)
+										print(f'{f'[{l.id}': >4}] {'User:':.<12}{user.name}\t{'Book:':.<12}{2}')  # pyright: ignore
 
 								t.menu(menus['browse'], pages=pages)
 								user_input = input('Enter option: ')
@@ -471,25 +486,89 @@ def main():
 
 								match user_input:
 									case '1':
-										...
+										if pages['at'] > 1:
+											pages['at'] -= 1
+											page_range['start'] -= settings['page_size']
+											page_range['end'] -= settings['page_size']
 									case '2':
-										...
+										if pages['at'] < pages['total']:
+											pages['at'] += 1
+											page_range['start'] += settings['page_size']
+											page_range['end'] += settings['page_size']
 									case '3':
-										...
+										lending = []
+										while not lending and user_input != 'q':
+											user_input = input('Select user (by id): ')
+											t.clear_cli()
+
+											lending = db.read(User, id=user_input)
+
+											if not lending:
+												print('Maybe this lending does not exist')
+
+										print(lending if lending else '')
+
+										t.menu(menus['model_actions'])
+										user_input = input('Enter option: ')
+										t.clear_cli()
+
+										match user_input:
+											case '1':
+												print('Editing a user')
+
+												if lending:
+													# Prompt user for inputs with current values pre-filled
+
+
+													while True:
+														try:
+															register_date_input = get_non_empty_input(
+																f'Register date ({user.register_date}): ', default=user.register_date
+															)
+
+															register_date_input = (
+																date.fromisoformat(register_date_input)
+																if register_date_input
+																else user.register_date
+															)
+															break
+														except ValueError:
+															print('Invalid date format')
+															continue
+
+													db.edit(Lending, id=lending.id, user_id=user_id_input, book_id=book_id_input, from=from_input, to=to_input)  # pyright: ignore
+
+													t.clear_cli()
+													break
+												else:
+													print('Lending not found.')
+											case '2':
+												t.menu(menus['deletion'])
+												user_input = input('Enter option: ')
+												t.clear_cli()
+
+												match user_input:
+													case 'delete':
+														db.delete(Lending, id=lending.id)
+													case 'q':
+														t.clear_cli()
+														continue
+													case _:
+														print(f'{'Invalid option':^{settings['width']}}')
+
+											case 'q':
+												t.clear_cli()
+												break
+											case _:
+												print(f'{'Invalid option':^{settings['width']}}')
+
 									case '4':
-										...
-									case '5':
-										...
-									case '6':
 										...
 									case 'q':
 										t.clear_cli()
 										break
 									case _:
-										print(
-											f'{'Invalid option':^{
-                                              settings['width']}}\n'
-										)
+										print(f"{'Invalid option':^{settings['width']}}")
 
 						# disabled by now
 						case 'audit':

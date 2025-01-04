@@ -12,12 +12,13 @@ class Lending:
 	table_name = 'lendings'
 
 	# Campos da tabela
-	id: Optional[int] = None
+	id: int | None = None
 	_: KW_ONLY
 	user_id: int
 	book_id: int
 	from_date: date
 	to_date: date
+	extensions: int = 0
 
 	def __str__(self):
 		return (
@@ -26,4 +27,5 @@ class Lending:
 			f"\t{'Book:':.<24}{db.read(Book, id=self.book_id)}\n"
 			f"\t{'From date:':.<24}{self.from_date}\n"
 			f"\t{'To date:':.<24}{self.to_date}\n"
+			f"\t{'Extensions:':.<24}{self.extensions}\n"
 		)
