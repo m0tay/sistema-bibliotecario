@@ -1,0 +1,10 @@
+[tool.ruff]
+line-length = 144
+target-version = "py313"
+select = ["E", "F", "B", "SIM", "UP", "I"]
+ignore = ["F401"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
