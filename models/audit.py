@@ -9,12 +9,11 @@ from models.users import User
 
 @dataclass
 class Audit:
-    table_name = "audits"
+	table_name = 'audits'
 
-    # Campos da tabela
-    id:Optional [int] = None
-    _: KW_ONLY
-    # falta definir
+	# Campos da tabela
+	id: Optional[int] = None
+	_: KW_ONLY
+	# falta definir
 
-    def __str__(self):
-        ...
+	def __str__(self): ...
