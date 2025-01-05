@@ -470,3 +470,6 @@ Para rodar o projeto, você pode utilizar dois modos principais:
   pyright
 
 Esses comandos ajudarão a garantir que o código esteja limpo e livre de erros antes de executar o sistema.
+
+
+> ℹ️ **Documentação**: Para aprender a utilizar a ferramenta, siga as instruções detalhadas no arquivo `documentation.md` na pasta do projeto.
