@@ -83,7 +83,6 @@ def main():
 					match user_input:
 						case '1':
 							while True:
-								# paginate by pagination_size
 								books = db.browse(Book)
 
 								# pages['total'] = len(books) // settings['page_size'] + (1 if len(books) % 10 > 0 else 0)
@@ -136,7 +135,6 @@ def main():
 												print('Editing a book')
 
 												if book:
-													# Prompt user for inputs with current values pre-filled
 													title_input = get_non_empty_input(
 														f'Title ({book.title}): ',
 														default=book.title,
@@ -210,7 +208,6 @@ def main():
 																'Invalid page number. Please enter a valid integer or press Enter to skip.'
 															)
 
-													# Edit the book record
 													db.edit(
 														Book,
 														id=book.id,
@@ -383,7 +380,6 @@ def main():
 
 						case '2':
 							while True:
-								# paginate by pagination_size
 								users = db.browse(User)
 								# pyright: ignore
 								pages['total'] = (
@@ -434,7 +430,6 @@ def main():
 												print('Editing a user')
 
 												if user:
-													# Prompt user for inputs with current values pre-filled
 													name_input = get_non_empty_input(
 														f'Name ({user.name}): ',
 														default=user.name,
@@ -562,7 +557,6 @@ def main():
 
 						case '3':
 							while True:
-								# paginate by pagination_size
 								lendings = db.browse(Lending)
 								pages['total'] = (
 									len(lendings) + settings['page_size'] - 1
@@ -740,7 +734,6 @@ def main():
 						# disabled by now
 						case 'audit':
 							while True:
-								# paginate by  pagination_size
 								db.browse(Audit)
 
 								t.menu(menus['browse'], pages=pages)
