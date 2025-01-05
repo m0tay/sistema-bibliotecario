@@ -95,8 +95,15 @@ def table_fields(model: type[object]) -> list[tuple[str, str]]:
 
 	# Gera a lista de campoœs e tipos SQL
 	table_fields = [
-		(field_name, type_mapping[field_type] if field_name != 'id' else 'INTEGER PRIMARY KEY NOT NULL')  # noqa: E501 # pyright: ignore
-		for field_name, field_type in zip(field_names, [f.type for f in dataclass_fields(model)])  # noqa: E501 # pyright: ignore
+		(
+			field_name,
+			type_mapping[field_type]
+			if field_name != 'id'
+			else 'INTEGER PRIMARY KEY NOT NULL',
+		)  # noqa: E501 # pyright: ignore
+		for field_name, field_type in zip(
+			field_names, [f.type for f in dataclass_fields(model)]
+		)  # noqa: E501 # pyright: ignore
 	]
 
 	return table_fields
@@ -159,7 +166,11 @@ def browse(model: type[object], **conditions: Optional[Dict[str, Any]]) -> List[
 	values = tuple(conditions.values())
 
 	# Construção da query
-	query = f'SELECT * FROM {model.table_name} WHERE {where_clause}' if conditions else f'SELECT * FROM {model.table_name}'  # noqa: E501 # pyright: ignore
+	query = (
+		f'SELECT * FROM {model.table_name} WHERE {where_clause}'
+		if conditions
+		else f'SELECT * FROM {model.table_name}'
+	)  # noqa: E501 # pyright: ignore
 
 	try:
 		cur.execute(query, values)

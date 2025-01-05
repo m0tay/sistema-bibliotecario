@@ -16,7 +16,13 @@ settings = {}
 
 menus = {
 	'principal': {'1': 'Library', '2': 'Backups', '3': 'Settings', 'q': 'Exit'},
-	'library': {'1': 'Books', '2': 'Users', '3': 'Lendings', '4': 'Audit', 'q': 'Go back'},
+	'library': {
+		'1': 'Books',
+		'2': 'Users',
+		'3': 'Lendings',
+		'4': 'Audit',
+		'q': 'Go back',
+	},
 	'backups': {
 		'1': 'See path for backup storage',
 		'2': 'List backups',
@@ -25,7 +31,13 @@ menus = {
 		'q': 'Go back',
 	},
 	'settings': {'1': 'Width', '2': 'Page size', 'q': 'Go back'},
-	'browse': {'1': 'Previous page', '2': 'Next page', '3': 'Expand', '4': 'Add', 'q': 'Go back'},
+	'browse': {
+		'1': 'Previous page',
+		'2': 'Next page',
+		'3': 'Expand',
+		'4': 'Add',
+		'q': 'Go back',
+	},
 	'model_actions': {'1': 'Edit', '2': 'Delete', 'q': 'Go back'},
 	'deletion': {'delete': 'Confirm deletion', 'q': 'Go back'},
 }
@@ -76,7 +88,9 @@ def main():
 
 								# pages['total'] = len(books) // settings['page_size'] + (1 if len(books) % 10 > 0 else 0)
 								# pyright: ignore
-								pages['total'] = (len(books) + settings['page_size'] - 1) // settings['page_size']
+								pages['total'] = (
+									len(books) + settings['page_size'] - 1
+								) // settings['page_size']
 
 								for idx, b in enumerate(books):
 									if t.in_range(idx, page_range):
@@ -143,15 +157,21 @@ def main():
 																f'Published Date (YYYY-MM-DD) ({book.published_date}): '
 															)
 															published_date = (
-																date.fromisoformat(published_date_input)
+																date.fromisoformat(
+																	published_date_input
+																)
 																if published_date_input
 																else book.published_date
 															)
 															break
 														except ValueError:
-															print('Invalid date format. Using default date (2000-01-01).')
+															print(
+																'Invalid date format. Using default date (2000-01-01).'
+															)
 															published_date = (
-																book.published_date if not published_date_input else date(2000, 1, 1)
+																book.published_date
+																if not published_date_input
+																else date(2000, 1, 1)
 															)
 															break
 
@@ -176,11 +196,19 @@ def main():
 
 													while True:
 														try:
-															pages_input = input(f'Pages ({book.pages}): ')
-															pages = int(pages_input) if pages_input.strip() else book.pages
+															pages_input = input(
+																f'Pages ({book.pages}): '
+															)
+															pages = (
+																int(pages_input)
+																if pages_input.strip()
+																else book.pages
+															)
 															break
 														except ValueError:
-															print('Invalid page number. Please enter a valid integer or press Enter to skip.')
+															print(
+																'Invalid page number. Please enter a valid integer or press Enter to skip.'
+															)
 
 													# Edit the book record
 													db.edit(
@@ -213,13 +241,17 @@ def main():
 														t.clear_cli()
 														continue
 													case _:
-														print(f'{'Invalid option':^{settings['width']}}')
+														print(
+															f'{'Invalid option':^{settings['width']}}'
+														)
 
 											case 'q':
 												t.clear_cli()
 												break
 											case _:
-												print(f'{'Invalid option':^{settings['width']}}')
+												print(
+													f'{'Invalid option':^{settings['width']}}'
+												)
 
 									case '4':
 										print('Adding a new book')
@@ -233,16 +265,27 @@ def main():
 
 										while True:
 											try:
-												published_date_input = input('Published Date (YYYY-MM-DD): ')
-												published_date = date.fromisoformat(published_date_input)
+												published_date_input = input(
+													'Published Date (YYYY-MM-DD): '
+												)
+												published_date = date.fromisoformat(
+													published_date_input
+												)
 												break
 											except ValueError:
 												print('Invalid date format')
 												continue
 
-										synopsis_input = get_non_empty_input('Synopsis: ')
-										publisher_input = get_non_empty_input('Publisher: ')
-										isbn_input = get_non_empty_input('ISBN (optional, press Enter to skip): ', optional=True)
+										synopsis_input = get_non_empty_input(
+											'Synopsis: '
+										)
+										publisher_input = get_non_empty_input(
+											'Publisher: '
+										)
+										isbn_input = get_non_empty_input(
+											'ISBN (optional, press Enter to skip): ',
+											optional=True,
+										)
 
 										temp: int = 0
 										t_str: str = ''
@@ -256,16 +299,27 @@ def main():
 												temp = 0
 												t_str = ''
 
-										genres_input = get_non_empty_input('(Select from those)\nGenres (separate with | ): ')
+										genres_input = get_non_empty_input(
+											'(Select from those)\nGenres (separate with | ): '
+										)
 
 										while True:
 											try:
-												pages_input = input('Pages (optional, press Enter to skip): ')
-												pages = int(pages_input) if pages_input.strip() else None
+												pages_input = input(
+													'Pages (optional, press Enter to skip): '
+												)
+												pages = (
+													int(pages_input)
+													if pages_input.strip()
+													else None
+												)
 												break
 											except ValueError:
-												print('Invalid page number. Please enter a valid integer or press Enter to skip.')
+												print(
+													'Invalid page number. Please enter a valid integer or press Enter to skip.'
+												)
 
+												# pyright: ignore
 										db.add(
 											Book(
 												title=title_input,
@@ -290,7 +344,11 @@ def main():
 
 										while not isinstance(user_input, int):
 											try:
-												user_input = int(input('Select book (by id) to permanently delete: '))
+												user_input = int(
+													input(
+														'Select book (by id) to permanently delete: '
+													)
+												)
 												t.clear_cli()
 											except ValueError:
 												print('Please, type a valid id')
@@ -311,20 +369,26 @@ def main():
 												t.clear_cli()
 												break
 											case _:
-												print(f'{'Invalid option':^{settings['width']}}')
+												print(
+													f'{'Invalid option':^{settings['width']}}'
+												)
 
 									case 'q':
 										t.clear_cli()
 										break
 									case _:
-										print(f'{'Invalid option':^{settings['width']}}')
+										print(
+											f'{'Invalid option':^{settings['width']}}'
+										)
 
 						case '2':
 							while True:
 								# paginate by pagination_size
 								users = db.browse(User)
 								# pyright: ignore
-								pages['total'] = (len(users) + settings['page_size'] - 1) // settings['page_size']
+								pages['total'] = (
+									len(users) + settings['page_size'] - 1
+								) // settings['page_size']
 
 								for idx, u in enumerate(users):
 									if t.in_range(idx, page_range):
@@ -371,21 +435,35 @@ def main():
 
 												if user:
 													# Prompt user for inputs with current values pre-filled
-													name_input = get_non_empty_input(f'Name ({user.name}): ', default=user.name)
-													email_input = get_non_empty_input(f'Email ({user.email}): ', default=user.email)
-													age_input = get_non_empty_input(f'Age ({user.age}): ', default=user.age)
+													name_input = get_non_empty_input(
+														f'Name ({user.name}): ',
+														default=user.name,
+													)
+													email_input = get_non_empty_input(
+														f'Email ({user.email}): ',
+														default=user.email,
+													)
+													age_input = get_non_empty_input(
+														f'Age ({user.age}): ',
+														default=user.age,
+													)
 													gender_input = get_non_empty_input(
-														f'Gender ({user.gender}): ', optional=True, default=user.gender
+														f'Gender ({user.gender}): ',
+														optional=True,
+														default=user.gender,
 													)
 
 													while True:
 														try:
 															register_date_input = get_non_empty_input(
-																f'Register date ({user.register_date}): ', default=user.register_date
+																f'Register date ({user.register_date}): ',
+																default=user.register_date,
 															)
 
 															register_date_input = (
-																date.fromisoformat(register_date_input)
+																date.fromisoformat(
+																	register_date_input
+																)
 																if register_date_input
 																else user.register_date
 															)
@@ -420,27 +498,41 @@ def main():
 														t.clear_cli()
 														continue
 													case _:
-														print(f'{'Invalid option':^{settings['width']}}')
+														print(
+															f'{'Invalid option':^{settings['width']}}'
+														)
 
 											case 'q':
 												t.clear_cli()
 												break
 											case _:
-												print(f'{'Invalid option':^{settings['width']}}')
+												print(
+													f'{'Invalid option':^{settings['width']}}'
+												)
 									case '4':
 										print('Adding a new user')
 
 										name_input = get_non_empty_input('Name: ')
 										email_input = get_non_empty_input('Email: ')
 										age_input = get_non_empty_input('Age: ')
-										gender_input = get_non_empty_input('Gender: ', optional=True)
+										gender_input = get_non_empty_input(
+											'Gender: ', optional=True
+										)
 
 										while True:
 											try:
-												register_date_input = get_non_empty_input('Register date: ')
+												register_date_input = (
+													get_non_empty_input(
+														'Register date: '
+													)
+												)
 
 												register_date_input = (
-													date.fromisoformat(register_date_input) if register_date_input else user.register_date
+													date.fromisoformat(
+														register_date_input
+													)
+													if register_date_input
+													else user.register_date
 												)
 												break
 											except ValueError:
@@ -472,13 +564,17 @@ def main():
 							while True:
 								# paginate by pagination_size
 								lendings = db.browse(Lending)
-								pages['total'] = (len(lendings) + settings['page_size'] - 1) // settings['page_size']
+								pages['total'] = (
+									len(lendings) + settings['page_size'] - 1
+								) // settings['page_size']
 
 								for idx, l in enumerate(lendings):
 									if t.in_range(idx, page_range):
 										user = db.read(User, id=l.user_id)
 										book = db.read(Book, id=l.book_id)
-										print(f'{f'[{l.id}': >4}] {'User:':.<12}{user.name}\t{'Book:':.<12}{2}')  # pyright: ignore
+										print(
+											f'{f'[{l.id}': >4}] {'User:':.<12}{user.name}\t{'Book:':.<12}{2}'
+										)  # pyright: ignore
 
 								t.menu(menus['browse'], pages=pages)
 								user_input = input('Enter option: ')
@@ -498,13 +594,17 @@ def main():
 									case '3':
 										lending = []
 										while not lending and user_input != 'q':
-											user_input = input('Select user (by id): ')
+											user_input = input(
+												'Select lending (by id): '
+											)
 											t.clear_cli()
 
-											lending = db.read(User, id=user_input)
+											lending = db.read(Lending, id=user_input)
 
 											if not lending:
-												print('Maybe this lending does not exist')
+												print(
+													'Maybe this lending does not exist'
+												)
 
 										print(lending if lending else '')
 
@@ -514,29 +614,53 @@ def main():
 
 										match user_input:
 											case '1':
-												print('Editing a user')
+												print('Editing a lending')
 
 												if lending:
-													# Prompt user for inputs with current values pre-filled
-
-
 													while True:
 														try:
-															register_date_input = get_non_empty_input(
-																f'Register date ({user.register_date}): ', default=user.register_date
+															from_date_input = get_non_empty_input(
+																f'From date ({lending.from_date}): ',
+																default=lending.from_date,
 															)
 
-															register_date_input = (
-																date.fromisoformat(register_date_input)
-																if register_date_input
-																else user.register_date
+															from_date_input = (
+																date.fromisoformat(
+																	from_date_input
+																)
+																if from_date_input
+																else lending.from_date
 															)
 															break
 														except ValueError:
 															print('Invalid date format')
 															continue
 
-													db.edit(Lending, id=lending.id, user_id=user_id_input, book_id=book_id_input, from=from_input, to=to_input)  # pyright: ignore
+													while True:
+														try:
+															to_date_input = get_non_empty_input(
+																f'From date ({lending.to_date}): ',
+																default=lending.to_date,
+															)
+
+															to_date_input = (
+																date.fromisoformat(
+																	to_date_input
+																)
+																if to_date_input
+																else lending.to_date
+															)
+															break
+														except ValueError:
+															print('Invalid date format')
+															continue
+
+													db.edit(
+														Lending,
+														id=lending.id,
+														from_date=from_date_input,
+														to_date=to_date_input,
+													)  # pyright: ignore
 
 													t.clear_cli()
 													break
@@ -549,26 +673,69 @@ def main():
 
 												match user_input:
 													case 'delete':
-														db.delete(Lending, id=lending.id)
+														db.delete(
+															Lending, id=lending.id
+														)
 													case 'q':
 														t.clear_cli()
 														continue
 													case _:
-														print(f'{'Invalid option':^{settings['width']}}')
+														print(
+															f'{'Invalid option':^{settings['width']}}'
+														)
 
 											case 'q':
 												t.clear_cli()
 												break
 											case _:
-												print(f'{'Invalid option':^{settings['width']}}')
+												print(
+													f'{'Invalid option':^{settings['width']}}'
+												)
 
 									case '4':
-										...
+										print('Adding a lending')
+
+										while True:
+											try:
+												from_date_input = get_non_empty_input(
+													f'From date ({lending.from_date}): ',
+													default=lending.from_date,
+												)
+
+												from_date_input = (
+													date.fromisoformat(from_date_input)
+													if from_date_input
+													else lending.from_date
+												)
+												break
+											except ValueError:
+												print('Invalid date format')
+												continue
+
+										while True:
+											try:
+												to_date_input = get_non_empty_input(
+													f'From date ({lending.from_date}): ',
+													default=lending.from_date,
+												)
+
+												to_date_input = (
+													date.fromisoformat(to_date_input)
+													if to_date_input
+													else lending.from_date
+												)
+												break
+											except ValueError:
+												print('Invalid date format')
+												continue
+
 									case 'q':
 										t.clear_cli()
 										break
 									case _:
-										print(f"{'Invalid option':^{settings['width']}}")
+										print(
+											f"{'Invalid option':^{settings['width']}}"
+										)
 
 						# disabled by now
 						case 'audit':
@@ -616,13 +783,15 @@ def main():
 
 					match user_input:
 						case '1':
-							pass
+							bu.path()
 						case '2':
-							pass
+							bu.list_backups()
 						case '3':
 							pass
+							bu.backup()
 						case '4':
 							pass
+							bu.delete_oldest_backup()
 						case 'q':
 							t.clear_cli()
 							break
@@ -639,7 +808,9 @@ def main():
 						case '1':
 							while True:
 								try:
-									user_input = input(f'Size (current: {settings['width']}): ')
+									user_input = input(
+										f'Size (current: {settings['width']}): '
+									)
 
 									user_input = int(user_input)
 
@@ -651,14 +822,21 @@ def main():
 							settings['width'] = user_input
 
 							t.setup(settings)
-							s.update({'width': int(user_input), 'page_size': settings['page_size']})
+							s.update(
+								{
+									'width': int(user_input),
+									'page_size': settings['page_size'],
+								}
+							)
 
 							t.clear_cli()
 
 						case '2':
 							while True:
 								try:
-									user_input = input(f'Size (current: {settings['page_size']}): ')
+									user_input = input(
+										f'Size (current: {settings['page_size']}): '
+									)
 
 									user_input = int(user_input)
 
@@ -670,7 +848,12 @@ def main():
 							settings['page_size'] = user_input
 
 							t.setup(settings)
-							s.update({'width': settings['width'], 'page_size': int(user_input)})
+							s.update(
+								{
+									'width': settings['width'],
+									'page_size': int(user_input),
+								}
+							)
 
 							t.clear_cli()
 						case 'q':
@@ -712,7 +895,9 @@ def factory_books():
 				title=f'Book Title {i}',
 				sub_title=f'Subtitle of Book {i}' if randint(0, 1) else None,
 				authors=f'Author {randint(1, 10)}',
-				published_date=date(randint(1990, 2025), randint(1, 12), randint(1, 28)),
+				published_date=date(
+					randint(1990, 2025), randint(1, 12), randint(1, 28)
+				),
 				synopsis=f'This is a synopsis for book {i}.',
 				publisher=f'Publisher {randint(1, 10)}',
 				isbn=f'{randint(1000000000, 9999999999)

@@ -22,7 +22,9 @@ def in_range(index: int, browse_range: Dict[str, int]) -> bool:
 def menu(options: Dict[str, str], pages=None):
 	global SETTINGS
 	if pages:
-		print(f"{' ' + f'Page: {pages['at']}/{pages['total']} ({SETTINGS['page_size']} per page)' + ' ':-^{SETTINGS['width']}}")
+		print(
+			f"{' ' + f'Page: {pages['at']}/{pages['total']} ({SETTINGS['page_size']} per page)' + ' ':-^{SETTINGS['width']}}"
+		)
 	print(f"{' ' + date.today().strftime('%A %d, %B %Y') + ' ':-^{SETTINGS['width']}}")
 
 	for key, value in options.items():

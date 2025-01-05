@@ -127,5 +127,7 @@ def list_backups() -> None:
 		index = backup.split('_')[1]
 		backup_path = os.path.join(BACKUP_DIR, backup)
 		creation_time = os.path.getctime(backup_path)
-		creation_date = datetime.fromtimestamp(creation_time).strftime('%Y-%m-%d %H:%M:%S')
+		creation_date = datetime.fromtimestamp(creation_time).strftime(
+			'%Y-%m-%d %H:%M:%S'
+		)
 		print(f'{index}: backup (created: {creation_date})')

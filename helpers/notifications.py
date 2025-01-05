@@ -1,12 +1,12 @@
-import sys
 import os
+import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models.users import User
+from models.audit import Audit
 from models.books import Book
 from models.lendings import Lending
-from models.audit import Audit
+from models.users import User
 
 
 def send_email(email: str, text_body: str, user_id: int) -> None:
