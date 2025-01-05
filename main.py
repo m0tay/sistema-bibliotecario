@@ -1,6 +1,7 @@
 from datetime import date, timedelta  # noqa
 from random import randint, choice
 from typing import Any
+from time import sleep
 
 from helpers import backup as bu
 from helpers import database as db
@@ -564,10 +565,10 @@ def main():
 
 								for idx, l in enumerate(lendings):
 									if t.in_range(idx, page_range):
-										user = db.read(User, id=l.user_id)
-										book = db.read(Book, id=l.book_id)
+										# user = db.read(User, id=l.user_id)
+										# book = db.read(Book, id=l.book_id)
 										print(
-											f'{f'[{l.id}': >4}] {'User:':.<12}{user.name}\t{'Book:':.<12}{2}'
+											f'{f'[{l.id}': >4}] {'User:':.<12}{2}\t{'Book:':.<12}{2}'
 										)  # pyright: ignore
 
 								t.menu(menus['browse'], pages=pages)
@@ -608,6 +609,11 @@ def main():
 
 										match user_input:
 											case '1':
+												if not lending.extensions < 2:
+													print('Can\'t be extended further')
+													break
+
+
 												print('Editing a lending')
 
 												if lending:
@@ -633,9 +639,14 @@ def main():
 													while True:
 														try:
 															to_date_input = get_non_empty_input(
-																f'From date ({lending.to_date}): ',
+																f'(write \'extend\' to add 10 days ahead)\nTo date ({lending.to_date}): ',
 																default=lending.to_date,
 															)
+
+															if to_date_input == "extend":
+																to_date_input = from_date_input + timedelta(days=10)
+																break
+
 
 															to_date_input = (
 																date.fromisoformat(
@@ -654,6 +665,7 @@ def main():
 														id=lending.id,
 														from_date=from_date_input,
 														to_date=to_date_input,
+														extensions=(lending.extensions + 1)
 													)  # pyright: ignore
 
 													t.clear_cli()
@@ -689,17 +701,17 @@ def main():
 									case '4':
 										print('Adding a lending')
 
+										book_id_input = get_non_empty_input('Book id:')
+										user_id_input = get_non_empty_input('User id:')
+
 										while True:
 											try:
-												from_date_input = get_non_empty_input(
-													f'From date ({lending.from_date}): ',
-													default=lending.from_date,
-												)
+												from_date_input = input('From date: ')
 
 												from_date_input = (
 													date.fromisoformat(from_date_input)
 													if from_date_input
-													else lending.from_date
+													else None
 												)
 												break
 											except ValueError:
@@ -708,20 +720,23 @@ def main():
 
 										while True:
 											try:
-												to_date_input = get_non_empty_input(
-													f'From date ({lending.from_date}): ',
-													default=lending.from_date,
-												)
+												to_date_input = input('(write \'extend\' to add 10 days ahead)\nTo date: ')
+
+												if to_date_input == "extend":
+													to_date_input = from_date_input + timedelta(days=10)
+													break
 
 												to_date_input = (
 													date.fromisoformat(to_date_input)
 													if to_date_input
-													else lending.from_date
+													else None
 												)
 												break
 											except ValueError:
 												print('Invalid date format')
 												continue
+
+										db.add(Lending(book_id=book_id_input, user_id=user_id_input, from_date=from_date_input, to_date=to_date_input, extensions=0))
 
 									case 'q':
 										t.clear_cli()
@@ -917,6 +932,7 @@ def factory_lendings():
 				book_id=book_id,
 				from_date=from_date,
 				to_date=to_date,
+				extensions=randint(1, 2)
 			),
 			verbose=True,
 		)  # pyright: ignore

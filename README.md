@@ -60,7 +60,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 
 ### Fase 3: Desenvolvimento da Interface de Linha de Comando (CLI)
 
-- [ ] Criar a interface de linha de comando (CLI) para interação inicial com o sistema
+- [x] Criar a interface de linha de comando (CLI) para interação inicial com o sistema
 - [ ] Permitir gerenciamento de livros, usuários e empréstimos via terminal
 
 ### Fase 4: Melhoria da Experiência do Usuário
@@ -77,7 +77,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
   - `helpers`: Módulos auxiliares, contendo funções de apoio e utilitários que não são o foco principal da aplicação.
   - `models`: Módulos responsáveis pela manipulação dos modelos de dados, que correspondem às tabelas da base de dados.
 - Comentaremos processos e fluxos importantes, evitando explicações excessivas. O código deve ser suficientemente claro para ser compreendido sem a necessidade de comentários em cada linha.
-  
+
 ## Estrutura do Projeto
 
 ```file
@@ -102,8 +102,8 @@ Um modelo é uma representação abstrata de uma tabela do banco de dados. Por e
 Por exemplo, considere o seguinte código que usa um **dicionário** para representar um livro:
 
 ```python
-book = {title: "1984", 
-        publication_date: "1949-09-31", 
+book = {title: "1984",
+        publication_date: "1949-09-31",
         synopsis: "A dystopian future.",
         publisher: "Edipro",
         genres: "Drama|Suspense|Ficção Científica"}
@@ -115,8 +115,8 @@ print(f"Livro: {book['title']}")
 Embora este código funcione para armazenar dados, ele não permite a flexibilidade de adicionar comportamentos específicos. Agora, veja como isso muda com a classe `Book`:
 
 ```python
-book = Book(title="1984", 
-        publication_date="1949-09-31", 
+book = Book(title="1984",
+        publication_date="1949-09-31",
         synopsis="A dystopian future.",
         publisher="Edipro",
         genres="Drama|Suspense|Ficção Científica")
@@ -138,7 +138,7 @@ book = Book.read(1)  # Obtendo o livro pelo ID
 user = User.read(3)  # Obtendo o usuário pelo ID
 
 notifications.send_email(
-    user_email=user.email, 
+    user_email=user.email,
     corpo_do_email=f"Obrigado {user.name}, por devolver a tempo o livro {book.title} de {book.authors}."
 )
 # Exemplo de saída: "Obrigado Tiago, por devolver a tempo o livro 1984 de George Orwell."
@@ -161,7 +161,7 @@ A distinção entre essas funções promove um código mais modular, reutilizáv
 Essa abordagem modular tem várias vantagens claras:
 
 - **Separação de responsabilidades**: Cada função é responsável por uma tarefa específica, como validar dados ou inserir no banco de dados, o que facilita tanto a manutenção quanto a expansão do código.
-  
+
 - **Reusabilidade e Flexibilidade**: Funções como `db.add()` podem ser usadas para adicionar diferentes tipos de dados sem precisar escrever a mesma lógica de inserção toda vez. Isso torna o código mais reutilizável e adaptável.
 
 - **Facilidade de manutenção**: Se for necessário alterar a maneira como os dados são inseridos no banco, como mudar uma query SQL, isso pode ser feito no helper `add()` sem afetar outras partes do sistema, como a validação dos dados.
@@ -198,7 +198,7 @@ Exemplo com decorador:
 class Weather:
     def __init__(self):
         pass
-    
+
     @staticmethod
     def is_rainy():
         return "it's rainy!"
@@ -354,12 +354,12 @@ graph LR
   B --> C["Adicionar ao stage"]
   C --> D["Registrar alterações"]
   D --> E["Enviar para remoto"]
-  
+
   G["Alterar arquivos"]
   G --> H["git add ."]
   H --> I["git commit -m 'mensagem'"]
   I --> J["git push -u origin main"]
-  
+
   classDef cmds fill:#f9f,stroke:#333,stroke-width:2px;
   class F,G,H,I,J cmds;
 ```
