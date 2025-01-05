@@ -2,6 +2,7 @@ from datetime import date, timedelta  # noqa
 from random import randint, choice
 from typing import Any
 from time import sleep
+import argparse
 
 from helpers import backup as bu
 from helpers import database as db
@@ -44,12 +45,17 @@ menus = {
 }
 
 
-def main():
+def main(dummy_data=False):
 	# Database setup
 	db.create_table(User)
 	db.create_table(Book)
 	db.create_table(Lending)
 	db.create_table(Audit)
+
+	if dummy_data:
+		factory_books()
+		factory_users()
+		factory_lendings()
 
 	# Backup setup
 	bu.setup()
@@ -951,7 +957,8 @@ def get_non_empty_input(prompt, optional=False, default=None):
 
 
 if __name__ == '__main__':
-	main()
-	# factory_users()
-	# factory_books()
-	# factory_lendings()
+
+	parser = argparse.ArgumentParser(description='Library System for AP')
+	parser.add_argument('--dummy-data', action='store_true')
+	args = parser.parse_args()
+	main(dummy_data=args.dummy_data)

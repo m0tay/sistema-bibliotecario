@@ -22,7 +22,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
     - [O que é um decorador (@qualquer-coisa-em-cima)](#o-que-é-um-decorador-qualquer-coisa-em-cima)
       - [Classe, objeto, método estático?](#classe-objeto-método-estático)
     - [Sistema de Recomendações](#sistema-de-recomendações)
-    - [\_: KW\_ONLY](#_-kw_only)
+    - [\_: KW_ONLY](#_-kw_only)
   - [Extensões recomendadas](#extensões-recomendadas)
   - [Como começar a trabalhar com o projeto?](#como-começar-a-trabalhar-com-o-projeto)
     - [Git](#git)
@@ -34,6 +34,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
     - [Registrando o progresso](#registrando-o-progresso)
     - [Utilidades](#utilidades)
     - [O que é HEAD, main?](#o-que-é-head-main)
+    - [Como executar](#usando)
 
 ---
 
@@ -71,7 +72,7 @@ Autores: Douglas Lobo, Flávio Marques, Kíria Amanájas, Tiago Novo
 
 ## Nosso Método
 
-- Utilizaremos *typing hints* no projeto, conforme o [guia de cheat sheet do mypy](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html), para garantir tipagem estática e melhorar a clareza do código.
+- Utilizaremos _typing hints_ no projeto, conforme o [guia de cheat sheet do mypy](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html), para garantir tipagem estática e melhorar a clareza do código.
 - O inglês será adotado como padrão para a nomeação de variáveis e funções, enquanto a documentação será escrita em português.
 - A estrutura das pastas reflete a função de cada módulo:
   - `helpers`: Módulos auxiliares, contendo funções de apoio e utilitários que não são o foco principal da aplicação.
@@ -243,7 +244,7 @@ O sistema de recomendações sugere livros com base nos empréstimos feitos por 
 
 Esse modelo oferece recomendações mais personalizadas, ampliando os horizontes do usuário, além de sugerir livros dentro dos seus interesses.
 
-### _: KW_ONLY
+### \_: KW_ONLY
 
 O `_:KW_ONLY` em `dataclass` do Python força que todos os campos definidos após ele sejam passados apenas como argumentos nomeados (ou seja, `param=arg`). Isso torna o código mais claro e seguro, pois evita o uso acidental de argumentos posicionais, que podem causar erros difíceis de identificar. Além disso, melhora a legibilidade, deixando claro quais parâmetros precisam ser definidos ao instanciar o objeto.
 
@@ -281,12 +282,14 @@ Agora você poderá usar o Git diretamente no terminal sem ler a enfadonha mensa
 
 ### Python
 
-Depois de instalar o Python, você precisa configurá-lo no *Path* do sistema. Para isso, siga os passos abaixo:
+Depois de instalar o Python, você precisa configurá-lo no _Path_ do sistema. Para isso, siga os passos abaixo:
 
 1. **Abrir configurações de variáveis de ambiente**:
+
    - Pressione `Win + R`, digite `sysdm.cpl` e pressione `Enter`. No menu "Propriedades do Sistema", clique em **Configurações Avançadas do Sistema** e depois em **Variáveis de Ambiente**.
 
 2. **Adicionar Python ao PATH**:
+
    - Em "Variáveis do Sistema", selecione a variável `Path` e clique em **Editar**.
    - Clique em **Novo** e adicione o caminho onde o Python está instalado (use `where python` para encontrar o local).
 
@@ -371,40 +374,99 @@ Para verificar os teus commits, use o comando git log. Isso exibirá o históric
 Se precisar reverter um commit ou verificar diferenças, use os seguintes comandos:
 
 - Verificar as diferenças antes de commit (diff):
-`git diff` (`h`, `j`, `k` e `l` para mover-se pela esquerda, baixo, cima e direita. Para sair é `q`)
-Mostra as diferenças não adicionadas entre os arquivos e o repositório.
+  `git diff` (`h`, `j`, `k` e `l` para mover-se pela esquerda, baixo, cima e direita. Para sair é `q`)
+  Mostra as diferenças não adicionadas entre os arquivos e o repositório.
 - Verificar diferenças entre commits (log):
-`git log`
-Mostra o histórico de commits realizados, com o ID do commit, autor, data e mensagem.
+  `git log`
+  Mostra o histórico de commits realizados, com o ID do commit, autor, data e mensagem.
 - Reverter um commit:
-`git revert <commit-id>`
-Cria um novo commit que desfaz as alterações de um commit específico.
+  `git revert <commit-id>`
+  Cria um novo commit que desfaz as alterações de um commit específico.
 
 - Para remover arquivos da área de stage sem perder as alterações feitas, use o comando:
-`git restore --staged <arquivo>`
-Isso vai desmarcar o arquivo para commit, mas mantém as modificações no seu diretório de trabalho.
+  `git restore --staged <arquivo>`
+  Isso vai desmarcar o arquivo para commit, mas mantém as modificações no seu diretório de trabalho.
 
 - Se você precisar reverter o estado de todo o repositório para o último commit e manter as mudanças no diretório de trabalho, use o reset soft:
-`git reset --soft HEAD~1`
-Isso move o ponteiro do HEAD para o commit anterior, mas mantém as modificações no diretório de trabalho e na área de stage.
+  `git reset --soft HEAD~1`
+  Isso move o ponteiro do HEAD para o commit anterior, mas mantém as modificações no diretório de trabalho e na área de stage.
 
 - Evite usar o reset hard sem cautela, pois ele descarta todas as modificações no diretório de trabalho e no stage:
-`git reset --hard HEAD~1`
-Isso vai mover o HEAD para o commit anterior e apagar permanentemente todas as alterações não registradas. É útil apenas quando você quer descartar tudo e voltar a um estado anterior, mas deve ser evitado se houver trabalho não commitado.
+  `git reset --hard HEAD~1`
+  Isso vai mover o HEAD para o commit anterior e apagar permanentemente todas as alterações não registradas. É útil apenas quando você quer descartar tudo e voltar a um estado anterior, mas deve ser evitado se houver trabalho não commitado.
 
 - Para modificar o último commit sem alterar o conteúdo, use o comando:
-`git commit --amend`
-Isso permite que você altere a mensagem do último commit ou adicione novas alterações a ele.
+  `git commit --amend`
+  Isso permite que você altere a mensagem do último commit ou adicione novas alterações a ele.
 
 - Para verificar o estado atual do repositório, use o comando:
-`git status`
-Ele mostra os arquivos modificados, os que estão no stage, e os que ainda não foram adicionados ao stage.
+  `git status`
+  Ele mostra os arquivos modificados, os que estão no stage, e os que ainda não foram adicionados ao stage.
 
 - Para adicionar um alias no Git, use o comando (**RECOMENDADO**):
-`git config --global alias.tree "log --graph --decorate --pretty=oneline --abbrev-commit"`
-Isso cria o alias `git tree`, que exibe o histórico de commits em um formato gráfico, com abreviações de commit e decorações, de forma concisa. Resultado:
-![resulatado](/readme_images/image-2.png)
+  `git config --global alias.tree "log --graph --decorate --pretty=oneline --abbrev-commit"`
+  Isso cria o alias `git tree`, que exibe o histórico de commits em um formato gráfico, com abreviações de commit e decorações, de forma concisa. Resultado:
+  ![resulatado](/readme_images/image-2.png)
 
 ### O que é HEAD, main?
 
-O HEAD é um ponteiro que aponta para o commit atual em que você está no repositório, e main é o nome padrão da *branch* principal onde geralmente o código final e estável é mantido.
+O HEAD é um ponteiro que aponta para o commit atual em que você está no repositório, e main é o nome padrão da _branch_ principal onde geralmente o código final e estável é mantido.
+
+### Usando
+
+Antes de rodar o projeto, siga os passos abaixo para garantir que o ambiente está configurado corretamente:
+
+1. **Versão do Python**: Certifique-se de ter o Python 3.10 ou superior instalado em seu sistema. Você pode verificar a versão instalada com o seguinte comando:
+
+   ```bash
+   python --version
+   ```
+
+   ou
+
+   ```bash
+   python3 --version
+   ```
+
+2. **Instalação de Dependências**: Certifique-se de que as dependências necessárias estão instaladas. Este projeto utiliza as seguintes ferramentas:
+
+   - ruff para linting.
+   - pyright para checagem de tipos.
+   - sqlite3 como banco de dados.
+
+   Para instalar as dependências, execute:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Executando o Projeto
+
+Para rodar o projeto, você pode utilizar dois modos principais:
+
+> ℹ️ **Sugestão**: Para testar o sistema com dados fictícios e garantir que tudo está funcionando corretamente, execute o comando `python main.py --dummy-data` primeiro. Isso permitirá que você explore as funcionalidades sem afetar dados reais.
+
+1. **Execução com Dados Dummy**:
+   Para rodar o projeto e carregar dados dummy no banco de dados, use o comando:
+
+   ```bash
+   python main.py --dummy-data
+   ```
+
+2. **Execução Padrão**:
+   Para executar o projeto normalmente, utilize o comando:
+   ```bash
+   python main.py
+   ```
+
+> ⚠️ **Aviso**: Executar `python main.py --dummy-data` irá sobrescrever as entradas do banco de dados existentes. Certifique-se de ter um backup antes de prosseguir.
+
+### Ferramentas de Suporte
+
+- **Ruff**: Certifique-se de que o código está em conformidade com os padrões definidos pelo ruff executando:
+  ruff .
+
+- **Pyright**: Para verificar a tipagem estática, execute:
+  pyright
+
+Esses comandos ajudarão a garantir que o código esteja limpo e livre de erros antes de executar o sistema.
