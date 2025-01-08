@@ -30,6 +30,7 @@ menus = {
 		'2': 'List backups',
 		'3': 'Create a new backup',
 		'4': 'Delete a backup',
+		'5': 'Load backup',
 		'q': 'Go back',
 	},
 	'settings': {'1': 'Width', '2': 'Page size', 'q': 'Go back'},
@@ -806,6 +807,8 @@ def main(dummy_data=False):
 						case '4':
 							pass
 							bu.delete_oldest_backup()
+						case '5':
+							bu.load_backup()
 						case 'q':
 							t.clear_cli()
 							break
